@@ -30,9 +30,5 @@ in
         };
       };
     };
-
-    environment.systemPackages = mkIf cfg.useOSProber [
-      pkgs.os-prober
-    ];
   };
 }

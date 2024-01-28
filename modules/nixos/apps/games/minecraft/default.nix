@@ -6,7 +6,7 @@ in
 {
   options.nos.apps.games.minecraft = {
     enable = mkEnableOption "Enable Minecraft to be installed on the system.";
-    enableBadlionClient = mkOption {
+    badlionClient.enable = mkOption {
       default = true;
       description = ''
         Enable the Badlion Client for Minecraft.
@@ -16,6 +16,6 @@ in
 
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ (prismlauncher.override { jdks = [ jdk8 jdk17 ]; }) ]
-      ++ optionals (cfg.enableBadlionClient) [ nos.badlion-client ]; 
+      ++ optionals (cfg.badlionClient.enable) [ nos.badlion-client ]; 
   };
 }

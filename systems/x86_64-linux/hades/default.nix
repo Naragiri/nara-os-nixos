@@ -10,20 +10,27 @@
       misc.neofetch.enable = true;
       games = {
         minecraft.enable = true;
-        steam.enable = true;
+        steam = {
+          enable = true;
+          consoleSession.enable = true;
+        };
+        common.launchers.enable = true;
       };
       social.discord.enable = true;
       tools = {
         common.enable = true;
+        nix-ld.enable = true;
         git.enable = true;
       };
       web.librewolf.enable = true;
+      web.vivaldi.enable = true;
     };
     desktop.plasma5.enable = true;
     system = {
       hardware = {
         audio.enable = true;
-        # gpu.amd.enable = true;
+        bluetooth.enable = true;
+        gpu.amd.enable = true;
         network.enable = true;
       };
       boot.grub.enable = true;

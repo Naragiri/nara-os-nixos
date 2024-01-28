@@ -3,7 +3,7 @@
     disk = {
       sda = {
         type = "disk";
-        device = "/dev/vda";
+        device = "/dev/nvme2n1";
         content = {
           type = "gpt";
           partitions = {
@@ -20,7 +20,7 @@
             };
             swap = {
               name = "swap";
-              size = "8G";
+              size = "48G";
               type = "8200";
               content = {
                 type = "swap";

@@ -15,6 +15,7 @@ in
       man
       wget
       btop
+      killall
     ];
   };
 }
