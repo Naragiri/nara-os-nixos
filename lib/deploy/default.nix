@@ -48,7 +48,7 @@ in rec {
                       sshUser = user;
                     }
                     // lib.optionalAttrs
-                    (host.config.system.security.doas.enable or false)
+                    (host.config.nos.system.security.doas.enable or false)
                     {
                       sudo = "doas -u";
                     };
