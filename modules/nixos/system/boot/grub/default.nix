@@ -21,7 +21,7 @@ in
         grub = {
           efiSupport = true;
           device = "nodev";
-          configurationLimit = 10;
+          configurationLimit = 30;
           useOSProber = cfg.useOSProber;
         };
         efi = {
