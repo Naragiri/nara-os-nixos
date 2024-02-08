@@ -1,5 +1,7 @@
 { lib, config, pkgs, ... }:
+
 with lib;
+with lib.nos;
 let
   cfg = config.nos.desktop.addons.polkit-gnome;
 in

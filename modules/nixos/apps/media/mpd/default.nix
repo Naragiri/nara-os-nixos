@@ -1,16 +1,14 @@
 { lib, config, pkgs, ... }:
+
 with lib;
+with lib.nos;
 let
   cfg = config.nos.apps.media.mpd;
 in
 {
   options.nos.apps.media.mpd = with types; {
     enable = mkEnableOption "Enable the mpd media daemon.";
-    musicDirectory = mkOption {
-      type = str;
-      default = "/home/${config.nos.system.user.name}/Music";
-      description = "The directory to source music from.";
-    };
+    musicDirectory = mkStrOpt "/home/${config.nos.system.user.name}/Music" "The directory to source music from.";
   };
 
   config = mkIf cfg.enable {
@@ -23,6 +21,7 @@ in
       mpdMusicDir = "${cfg.musicDirectory}";
     };
 
+    # TODO: unhardcode this
     systemd.services.mpd.environment = {
       XDG_RUNTIME_DIR = "/run/user/1000"; # User-id 1000 must match above user. MPD will look inside this directory for the PipeWire socket.
     };

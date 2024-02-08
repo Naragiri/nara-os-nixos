@@ -1,32 +1,16 @@
-{
-  options,
-  config,
-  lib,
-  inputs,
-  ...
-}:
+{ options, config, lib, inputs,... }:
+
 with lib;
+with lib.nos;
 {
   imports = with inputs; [
     home-manager.nixosModules.home-manager
   ];
 
   options.home = with types; {
-    file = mkOption {
-      type = attrs;
-      default = {};
-      description = "A set of files to be managed by home-manager's <option>home.file</option>.";
-    };
-    configFile = mkOption {
-      type = attrs;
-      default = {};
-      description = "A set of files to be managed by home-manager's <option>xdg.configFile</option>.";
-    };
-    extraOptions = mkOption {
-      type = attrs;
-      default = {};
-      description = "Options to pass directly to home-manager.";
-    };
+    file = mkOpt attrs {} "A set of files to be managed by home-manager's <option>home.file</option>.";
+    configFile = mkOpt attrs {} "A set of files to be managed by home-manager's <option>xdg.configFile</option>.";
+    extraOptions = mkOpt attrs {} "Options to pass directly to home-manager.";
   };
 
     config = {

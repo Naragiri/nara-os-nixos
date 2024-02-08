@@ -1,17 +1,14 @@
 { lib, config, pkgs, ... }:
+
 with lib;
+with lib.nos;
 let
   cfg = config.nos.system.boot.grub;
 in
 {
   options.nos.system.boot.grub = {
     enable = mkEnableOption "Enable grub as the bootloader.";
-    useOSProber = mkOption {
-      default = true;
-      description = ''
-        Use OS prober to detect other operating systems.
-      '';
-    };
+    useOSProber = mkEnableOption "Use OS prober to detect other operating systems.";
   };
 
   config = mkIf cfg.enable {

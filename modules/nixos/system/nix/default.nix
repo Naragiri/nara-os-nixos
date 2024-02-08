@@ -1,11 +1,7 @@
-{
-  options,
-  config,
-  lib,
-  inputs,
-  ...
-}:
+{ options, config, lib, inputs, ... }:
+
 with lib;
+with lib.nos;
 {
   config = {
     nix = let

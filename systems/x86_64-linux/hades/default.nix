@@ -1,41 +1,46 @@
-{... }:
+{ lib, ... }:
 
+with lib.nos;
 {
   imports = [ ./hardware-configuration.nix ];
 
   nos = { 
     apps = {
-      editor.vscode.enable = true;
-      media.spotify.enable = true;
-      misc.neofetch.enable = true;
+      editor.vscode = enabled;
+      media.spotify = enabled;
+      misc.neofetch = enabled;
       games = {
-        minecraft.enable = true;
+        minecraft = enabled;
         steam = {
           enable = true;
-          consoleSession.enable = true;
+          consoleSession = enabled;
         };
-        common.launchers.enable = true;
+        common.launchers = enabled;
       };
-      social.discord.enable = true;
+      social.discord = enabled;
       tools = {
-        common.enable = true;
-        nix-ld.enable = true;
-        git.enable = true;
+        common = enabled;
+        nix-ld = enabled;
+        git = enabled;
       };
-      web.librewolf.enable = true;
-      web.vivaldi.enable = true;
+      web.librewolf = enabled;
+      web.vivaldi = enabled;
     };
-    desktop.plasma5.enable = true;
-    system = {
-      hardware = {
-        audio.enable = true;
-        bluetooth.enable = true;
-        gpu.amd.enable = true;
-        network.enable = true;
+    desktop.plasma5 = enabled;
+    hardware = {
+      audio = enabled;
+      bluetooth = enabled;
+      gpu.amd = enabled;
+      network = enabled;
+      openrgb = {
+        enable = true;
+        no-rgb = enabled;
       };
-      boot.grub.enable = true;
-      security.doas.enable = true;
-      service.flatpak.enable = true;
+    };
+    system = {
+      boot.grub = enabled;
+      security.doas = enabled;
+      service.flatpak = enabled;
     };
   };
 

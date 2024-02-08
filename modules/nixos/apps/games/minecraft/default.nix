@@ -1,17 +1,14 @@
 { lib, config, pkgs, ... }:
+
 with lib;
+with lib.nos;
 let
   cfg = config.nos.apps.games.minecraft;
 in
 {
   options.nos.apps.games.minecraft = {
     enable = mkEnableOption "Enable Minecraft to be installed on the system.";
-    badlionClient.enable = mkOption {
-      default = true;
-      description = ''
-        Enable the Badlion Client for Minecraft.
-      '';
-    };
+    badlionClient.enable = mkEnableOption "Enable the Badlion Client for Minecraft.";
   };
 
   config = mkIf cfg.enable {

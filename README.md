@@ -1,1 +1,1 @@
-# nara-os-nixos
+# naraos-nixos-flake

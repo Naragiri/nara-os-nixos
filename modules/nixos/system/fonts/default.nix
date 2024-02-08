@@ -1,26 +1,16 @@
 { lib, config, pkgs, ... }:
+
 with lib;
+with lib.nos;
 let
   cfg = config.nos.system.fonts;
 in
 {
   options.nos.system.fonts = with types; {
-    terminus.enable = mkOption {
-      type = bool;
-      default = true;
-      description = "Enable the terminus fonts module.";
-    };
+    terminus.enable = mkBoolOpt true "Enable the terminus fonts module.";
     system = {
-      enable = mkOption {
-        type = bool;
-        default = true;
-        description = "Enable the system fonts module.";
-      };
-      customFonts = mkOption {
-        type = (listOf package);
-        default = [];
-        description = "Additional fonts to be used system wide.";
-      };
+      enable = mkBoolOpt true "Enable the system fonts module.";
+      customFonts = mkOpt (listOf package) [] "Additional fonts to be used system wide.";
     };
   };
 

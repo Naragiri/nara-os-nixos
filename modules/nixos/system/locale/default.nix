@@ -1,5 +1,7 @@
 { lib, config, ... }:
+
 with lib;
+with lib.nos;
 {
   config = {
     i18n.defaultLocale = "en_US.UTF-8";

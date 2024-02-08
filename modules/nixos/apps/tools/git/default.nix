@@ -1,16 +1,18 @@
 { lib, config, pkgs, ... }:
+
 with lib;
+with lib.nos;
 let
   cfg = config.nos.apps.tools.git;
 in
 {
-  options.nos.apps.tools.git.enable = mkEnableOption "Enable the git module.";
+  options.nos.apps.tools.git = {
+    enable = mkEnableOption "Enable the git module.";
+    userName = mkStrOpt "Naragiri" "The username to use for git.";
+    userEmail = mkStrOpt "git@aluber.dev" "The email to use for git.";
+  };
 
   config = mkIf cfg.enable {
-    # Git must be installed system-wide despite being installed by home-manager
-    # or you will be unable to rebuild due to it not finding git.
-    # just nixos being a bit quirky.
-    environment.systemPackages = with pkgs; [ git ];
 
     environment.shellAliases = {
       "ga" = "git add";
@@ -27,8 +29,14 @@ in
       "gss" = "git status -s";
     };
 
+    # Git must be installed system-wide despite being added by home-manager
+    # or you will be unable to rebuild due to it not finding git.
+    # just nixos being a bit quirky.
+    environment.systemPackages = with pkgs; [ git ];
+
     home.extraOptions.programs.git = {
       enable = true;
+      inherit (cfg) userName userEmail;
       extraConfig = {
         init.defaultBranch = "main";
         pull.rebase = true;

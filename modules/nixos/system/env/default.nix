@@ -1,5 +1,7 @@
 { lib, config, pkgs, ... }:
+
 with lib;
+with lib.nos;
 let
   cfg = config.nos.system.env;
 in
@@ -15,7 +17,7 @@ in
   };
 
   config = {
-    environment = {
+    environment = rec {
       sessionVariables = {
         XDG_CACHE_HOME = "$HOME/.cache";
         XDG_CONFIG_HOME = "$HOME/.config";
@@ -25,7 +27,7 @@ in
         XDG_DESKTOP_DIR = "$HOME";
 
         PATH = [
-          "$HOME/.local/bin"
+          "${sessionVariables.XDG_BIN_HOME}"
         ];
       };
       extraInit =

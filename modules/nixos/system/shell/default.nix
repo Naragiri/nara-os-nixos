@@ -1,15 +1,13 @@
 { lib, config, pkgs, ... }:
+
 with lib;
+with lib.nos;
 let
   cfg = config.nos.system.shell;
 in
 {
   options.nos.system.shell = with types; {
-    shell = mkOption {
-      type = (enum [ "zsh" ]);
-      default = "zsh";
-      description = "The default shell for the system users.";
-    };
+    shell = mkOpt (enum [ "zsh" ]) "zsh" "The default shell for the system users.";
   };
 
   config = {

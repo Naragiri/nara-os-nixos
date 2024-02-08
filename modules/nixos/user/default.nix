@@ -1,37 +1,20 @@
 { lib, config, options, pkgs, ... }:
+
 with lib;
+with lib.nos;
 let
   cfg = config.nos.system.user;
 in
 {
   options.nos.system.user = with types; {
-    name = mkOption {
-      type = str;
-      default = "nara";
-      description = "The name to use for the main user account.";
-    };
-    initialPassword  = mkOption {
-      type = str;
-      default = "123";
-      description = "The initial password for the main user account.";
-    };
-    extraGroups  = mkOption {
-      type = (listOf str);
-      default = [];
-      description = "Extra groups for the main user account.";
-    };
+    name = mkStrOpt "nara" "The name to use for the main user account.";
+    initialPassword  = mkStrOpt "123" "The initial password for the main user account.";
+    extraGroups = mkOpt (listOf str) [] "Extra groups for the main user account.";
   };
 
   config = {
-    environment.sessionVariables = {
-      FLAKE_DIR = "/home/${cfg.name}/nara-os-nixos";
-      PATH = [
-        "$HOME/.local/bin"
-      ];
-    };
-
-    environment.shellAliases = { "nix-update" = "nixos-rebuild switch --flake $FLAKE_DIR#"; };
-
+    environment.sessionVariables.FLAKE_DIR = "/home/${cfg.name}/naraos-nixos-flake";
+    
     home = {
       file = {
         "Documents/.keep".text = "";
