@@ -12,7 +12,14 @@ in
 
   config = {
     environment.systemPackages = with pkgs; optionals (cfg.launchers.enable) [
-      lutris heroic
+      (lutris.override {
+        extraPkgs = pkgs: [
+          # List package dependencies here
+          wineWowPackages.stable
+          winetricks
+        ];
+      }) 
+      heroic
     ];
   };
 }

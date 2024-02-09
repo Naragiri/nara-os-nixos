@@ -1,12 +1,4 @@
-{...}: {
-  imports = [ ./hardware-configuration.nix ];
-
-  #system.boot.efi.enable = true;
-
-  system.stateVersion = "23.11";
-
-  { pkgs, ... }:
-
+{ pkgs, ... }:
 {
   imports = [ ./hardware-configuration.nix ];
 
@@ -22,5 +14,4 @@
   # };
 
   system.stateVersion = "23.11";
-}
 }

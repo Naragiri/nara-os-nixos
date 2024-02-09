@@ -26,6 +26,7 @@ with lib.nos;
       web.librewolf = enabled;
       web.vivaldi = enabled;
     };
+    desktop.bspwm = enabled;
     desktop.plasma5 = enabled;
     hardware = {
       audio = enabled;
