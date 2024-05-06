@@ -3,7 +3,7 @@
     disk = {
       sda = {
         type = "disk";
-        device = "/dev/nvme2n1";
+        device = "/dev/disk/by-id/nvme-CT2000P5PSSD8_22513D4D5A9F";
         content = {
           type = "gpt";
           partitions = {
@@ -39,23 +39,6 @@
                 extraArgs = [ "-O casefold -E encoding_flags=strict" ];
               };
             };
-            # root = {
-            #   name = "root";
-            #   size = "100%";
-            #   type = "8309";
-            #   content = {
-            #     type = "luks";
-            #     name = "crypted";
-            #     settings.allowDiscards = true;
-            #     passwordFile = "/tmp/secret.key";
-            #     content = {
-            #       type = "filesystem";
-            #       format = "ext4";
-            #       mountpoint = "/";
-            #       mountOptions = [ "noatime" ];
-            #     };
-            #   };
-            # };
           };
         };
       };
