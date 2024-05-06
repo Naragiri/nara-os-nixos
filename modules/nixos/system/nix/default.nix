@@ -1,11 +1,19 @@
-{ options, config, lib, inputs, ... }:
-
+{ options, config, lib, pkgs, ... }:
 with lib;
 with lib.nos;
-{
+let cfg = config.nos.system.nix;
+in {
+  options.nos.system.nix = with types; {
+    extraSubstituters =
+      mkOpt (listOf str) [ ] "Additional cachix substituters.";
+    extraTrustedPublicKeys =
+      mkOpt (listOf str) [ ] "Additional publickeys for cachix substituters.";
+  };
+
   config = {
-    nix = let
-      users = [ "root" config.nos.system.user.name ];
+    environment.systemPackages = with pkgs; [ deploy-rs ];
+
+    nix = let users = [ "root" config.nos.user.name ];
     in {
       settings = {
         experimental-features = "nix-command flakes";
@@ -18,6 +26,10 @@ with lib.nos;
         allowed-users = users;
         keep-outputs = true;
         keep-derivations = true;
+
+        # Mainly for hyprland.
+        substituters = cfg.extraSubstituters;
+        trusted-public-keys = cfg.extraTrustedPublicKeys;
       };
 
       gc = {

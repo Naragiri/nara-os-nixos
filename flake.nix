@@ -1,19 +1,28 @@
 {
   description = "NaraOS NixOS Configuration";
-  
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    # i hate nintendo.
+    yuzu-fix.url =
+      "github:nixos/nixpkgs/d89fdbfc985022d183073cb52df4d35b791d42cf";
 
-    disko.url = "github:nix-community/disko";
+    old-minecraft.url =
+      "github:nixos/nixpkgs/8e644bcfa7afa8045ff717b119126c709b41bf3f";
 
-    home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    snowfall-lib = {
-      url = "github:snowfallorg/lib";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    home-manager = {
+      url = "github:nix-community/home-manager/release-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -22,50 +31,61 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    deploy-rs = {
-      url = "github:serokell/deploy-rs";
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
+
+    nixvim.url = "github:nix-community/nixvim/nixos-23.11";
+
+    pre-commit-hooks = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    snowfall-lib = {
+      url = "github:snowfallorg/lib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs = inputs:
-  let
-    lib = inputs.snowfall-lib.mkLib {
-      inherit inputs;
-      src = ./.;
+    let
+      lib = inputs.snowfall-lib.mkLib {
+        inherit inputs;
+        src = ./.;
 
-      snowfall = {
-        meta = {
-          name = "nara-os-nixos";
-          title = "NaraOS NixOS";
+        snowfall = {
+          meta = {
+            name = "naraos-nixos-flake";
+            title = "NaraOS NixOS";
+          };
+
+          namespace = "nos";
         };
-
-        namespace = "nos";
       };
-    };
-  in
-  (lib.mkFlake {
-    inherit inputs;
-    src = ./.;
+    in (lib.mkFlake {
+      channels-config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [ "electron-25.9.0" ];
+      };
 
-    channels-config.allowUnfree = true;
+      systems.hosts.hades.modules = [ ./disks/hades.nix ];
 
-    deploy = lib.mkDeploy { inherit (inputs) self; };
+      systems.hosts.atlas.modules = [ ./disks/atlas.nix ];
 
-    checks = builtins.mapAttrs
-        (_system: deploy-lib:
-          deploy-lib.deployChecks inputs.self.deploy)
-        inputs.deploy-rs.lib;
+      templates = import ./templates { };
 
-    systems.modules.nixos = with inputs; [
-      nix-ld.nixosModules.nix-ld
-      disko.nixosModules.disko
-    ];
+      outputs-builder = channels: {
+        formatter = channels.nixpkgs.treefmt;
 
-    systems.hosts.hades.modules = [
-      ./disks/hades.nix
-    ];
-
-    templates = import ./templates {};
-  });
+        checks.pre-commit-check =
+          inputs.pre-commit-hooks.lib.${channels.nixpkgs.system}.run {
+            src = ./.;
+            hooks = { treefmt.enable = true; };
+          };
+      };
+    });
 }

@@ -1,12 +1,11 @@
 { lib, config, pkgs, ... }:
-
 with lib;
 with lib.nos;
-let
-  cfg = config.nos.hardware.bluetooth;
-in
-{
-  options.nos.hardware.bluetooth.enable = mkEnableOption "Enable the bluetooth module.";
+let cfg = config.nos.hardware.bluetooth;
+in {
+  options.nos.hardware.bluetooth = with types; {
+    enable = mkEnableOption "Enable bluetooth.";
+  };
 
   config = mkIf cfg.enable {
     services.blueman.enable = true;
@@ -20,9 +19,7 @@ in
           JustWorksRepairing = "always";
           Privacy = "device";
         };
-        Policy = {
-          AutoEnable = true;
-        };
+        Policy = { AutoEnable = true; };
       };
     };
   };

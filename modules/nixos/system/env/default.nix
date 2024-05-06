@@ -1,20 +1,16 @@
 { lib, config, pkgs, ... }:
-
 with lib;
 with lib.nos;
-let
-  cfg = config.nos.system.env;
-in
-{
-  options.nos.system.env = with types; mkOption {
-    type = attrsOf (oneOf [str path (listOf (either str path))]);
-    apply = mapAttrs (_n: v:
-      if isList v
-      then concatMapStringsSep ":" toString v
-      else (toString v));
-    default = {};
-    description = "A set of environment variables to set.";
-  };
+let cfg = config.nos.system.env;
+in {
+  options.nos.system.env = with types;
+    mkOption {
+      type = attrsOf (oneOf [ str path (listOf (either str path)) ]);
+      apply = mapAttrs (_n: v:
+        if isList v then concatMapStringsSep ":" toString v else (toString v));
+      default = { };
+      description = "A set of environment variables to set.";
+    };
 
   config = {
     environment = rec {
@@ -26,12 +22,9 @@ in
         # To prevent firefox from creating ~/Desktop.
         XDG_DESKTOP_DIR = "$HOME";
 
-        PATH = [
-          "${sessionVariables.XDG_BIN_HOME}"
-        ];
+        PATH = [ "${sessionVariables.XDG_BIN_HOME}" ];
       };
-      extraInit =
-        concatStringsSep "\n"
+      extraInit = concatStringsSep "\n"
         (mapAttrsToList (n: v: ''export ${n}="${v}"'') cfg);
     };
   };

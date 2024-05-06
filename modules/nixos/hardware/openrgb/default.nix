@@ -1,5 +1,4 @@
 { lib, config, pkgs, ... }:
-
 with lib;
 with lib.nos;
 let
@@ -12,15 +11,14 @@ let
     done
   '';
   cfg = config.nos.hardware.openrgb;
-in
-{
-  options.nos.hardware.openrgb = {
-    enable = mkEnableOption "Enable the openrgb module.";
-    no-rgb.enable = mkEnableOption "Automatically turn off rgb via systemd service.";
+in {
+  options.nos.hardware.openrgb = with types; {
+    enable = mkEnableOption "Enable openrgb.";
+    no-rgb.enable = mkEnableOption
+      "Enable systemd service to automatically turn-off all rgb.";
   };
 
   config = mkIf cfg.enable {
-
     services.hardware.openrgb = {
       enable = true;
       package = pkgs.openrgb-with-all-plugins;

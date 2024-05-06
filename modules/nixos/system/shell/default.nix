@@ -1,22 +1,17 @@
 { lib, config, pkgs, ... }:
-
 with lib;
 with lib.nos;
-let
-  cfg = config.nos.system.shell;
-in
-{
+let cfg = config.nos.system.shell;
+in {
   options.nos.system.shell = with types; {
-    shell = mkOpt (enum [ "zsh" ]) "zsh" "The default shell for the system users.";
+    name = mkOpt (enum [ "zsh" ]) "zsh" "The default system shell.";
   };
 
   config = {
-    environment.systemPackages = with pkgs; [
-      eza
-      bat
-    ];
+    environment.systemPackages = with pkgs; [ eza bat ];
 
-    users.defaultUserShell = pkgs.${cfg.shell};
+    users.defaultUserShell = pkgs.${cfg.name};
+    users.users.root.shell = pkgs.${cfg.name};
 
     environment.shellAliases = {
       ".." = "cd ..";
@@ -31,9 +26,9 @@ in
       "tree" = "exa --tree --icons";
     };
 
-    programs.zsh.enable = (cfg.shell == "zsh");
+    programs.zsh.enable = cfg.name == "zsh";
 
-    home.extraOptions.programs.zsh = mkIf (cfg.shell == "zsh") {
+    nos.home.extraOptions.programs.zsh = mkIf (cfg.name == "zsh") {
       enable = true;
       dotDir = ".config/zsh";
       history.expireDuplicatesFirst = true;

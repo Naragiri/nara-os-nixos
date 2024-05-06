@@ -1,12 +1,11 @@
 { lib, config, pkgs, ... }:
-
 with lib;
 with lib.nos;
-let
-  cfg = config.nos.hardware.audio;
-in
-{
-  options.nos.hardware.audio.enable = mkEnableOption "Enable pipewire on the device.";
+let cfg = config.nos.hardware.audio;
+in {
+  options.nos.hardware.audio = with types; {
+    enable = mkEnableOption "Enable pipewire.";
+  };
 
   config = mkIf cfg.enable {
     security.rtkit.enable = true;
@@ -18,5 +17,6 @@ in
       jack.enable = true;
       pulse.enable = true;
     };
+    environment.systemPackages = with pkgs; [ pavucontrol ];
   };
 }

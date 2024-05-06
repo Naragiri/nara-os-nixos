@@ -1,12 +1,11 @@
 { lib, config, pkgs, ... }:
-
 with lib;
 with lib.nos;
-let
-  cfg = config.nos.system.security.doas;
-in
-{
-  options.nos.system.security.doas.enable = mkEnableOption "Enable doas instead of sudo.";
+let cfg = config.nos.system.security.doas;
+in {
+  options.nos.system.security.doas = with types; {
+    enable = mkEnableOption "Enable doas and remove sudo.";
+  };
 
   config = mkIf cfg.enable {
     environment.shellAliases = { sudo = "doas"; };
@@ -17,7 +16,7 @@ in
       doas = {
         enable = true;
         extraRules = [{
-          groups = [ "wheel" ];
+          users = [ config.nos.user.name ];
           keepEnv = true;
           persist = true;
         }];

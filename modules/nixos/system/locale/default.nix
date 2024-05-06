@@ -1,18 +1,27 @@
 { lib, config, ... }:
-
 with lib;
-with lib.nos;
-{
+with lib.nos; {
   config = {
     i18n.defaultLocale = "en_US.UTF-8";
-    time.timeZone = "America/New_York";
-
-    console = {
-      keyMap = mkForce "us";
+    i18n.extraLocaleSettings = {
+      LC_ADDRESS = "en_US.UTF-8";
+      LC_IDENTIFICATION = "en_US.UTF-8";
+      LC_MEASUREMENT = "en_US.UTF-8";
+      LC_MONETARY = "en_US.UTF-8";
+      LC_NAME = "en_US.UTF-8";
+      LC_NUMERIC = "en_US.UTF-8";
+      LC_PAPER = "en_US.UTF-8";
+      LC_TELEPHONE = "en_US.UTF-8";
+      LC_TIME = "en_US.UTF-8";
     };
 
+    time.timeZone = "America/New_York";
+
+    console = { keyMap = mkForce "us"; };
+
     services.xserver = {
-      layout = "us";
+      layout = "${config.console.keyMap}";
+      xkb = { layout = "${config.console.keyMap}"; };
     };
   };
 }

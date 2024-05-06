@@ -1,15 +1,16 @@
-{ pkgs, ... }:
-{
+{ lib, ... }:
+with lib;
+with lib.nos; {
   imports = [ ./hardware-configuration.nix ];
 
-  # nos = { 
-  #   system = {
+  # nos = {
   #     hardware = {
-  #       network.enable = true;
-  #       audio.enable = true;
+  #       network = enabled;
+  #       audio = enabled;
   #     };
-  #     boot.grub.enable = true;
-  #     security.doas.enable = true;
+  #   system = {
+  #     boot.grub = enabled;
+  #     security.doas = enabled;
   #   };
   # };
 
