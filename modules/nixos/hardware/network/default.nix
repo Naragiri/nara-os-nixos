@@ -10,5 +10,9 @@ in {
   config = mkIf cfg.enable {
     networking.firewall.enable = true;
     networking.networkmanager.enable = true;
+
+    environment.systemPackages = with pkgs; [
+      networkmanagerapplet
+    ];
   };
 }
