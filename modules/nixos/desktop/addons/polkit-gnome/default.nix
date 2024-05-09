@@ -18,7 +18,7 @@ in {
         serviceConfig = {
           Type = "simple";
           ExecStart =
-            "${pkgs.polkit_gnome}/bin/polkit-gnome-authentication-agent-1";
+            "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
           Restart = "on-failure";
           RestartSec = 1;
           TimeoutStopSec = 10;

@@ -40,9 +40,8 @@ with lib.nos; {
     };
     cli-apps = {
       ani-cli = enabled;
+      fastfetch = enabled;
       lf = enabled;
-      neofetch = enabled;
-      neovim = enabled;
     };
     desktop.awesome = enabled;
     hardware = {
