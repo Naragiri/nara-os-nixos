@@ -5,7 +5,7 @@ let
   cfg = config.nos.apps.nemo;
   fake-terminal = pkgs.writeShellApplication {
     name = "gnome-terminal";
-    text = ''${getExe pkgs.kitty} "$@"'';
+    text = ''${getExe pkgs.kitty} -e "$@"'';
   };
   nemo-patched = pkgs.cinnamon.nemo-with-extensions.overrideAttrs (_: {
     postFixup = ''
@@ -17,21 +17,32 @@ let
 in {
   options.nos.apps.nemo = with types; {
     enable = mkEnableOption "Enable nemo.";
-    fileRoller.enable = mkEnableOption "Enable FileRoller.";
+    fileRoller.enable = mkEnabledOption "Enable FileRoller.";
   };
 
   config = mkIf cfg.enable {
     programs.file-roller.enable = cfg.fileRoller.enable;
 
-    nos.home.extraOptions.dconf.settings = {
-      "org/gnome/desktop/applications/terminal" = { exec = getExe pkgs.kitty; };
-      "org/cinnamon/desktop/applications/terminal" = {
-        exec = getExe pkgs.kitty;
+    nos.home.extraOptions = {
+      dconf.settings = {
+        "org/gnome/desktop/applications/terminal" = {
+          exec = getExe pkgs.kitty;
+        };
+        "org/cinnamon/desktop/applications/terminal" = {
+          exec = getExe pkgs.kitty;
+        };
+      };
+      xdg.mimeApps.defaultApplications = {
+        "inode/directory" = "nemo.desktop";
+      } // optionalAttrs cfg.fileRoller.enable {
+        "application/zip" = "org.gnome.FileRoller.desktop";
+        "application/vnd.rar" = "org.gnome.FileRoller.desktop";
+        "application/x-7z-compressed" = "org.gnome.FileRoller.desktop";
       };
     };
 
     environment.systemPackages = with pkgs;
       [ nemo-patched ]
-      ++ optional (cfg.fileRoller.enable) [ cinnamon.nemo-fileroller ];
+      ++ optionals (cfg.fileRoller.enable) [ cinnamon.nemo-fileroller ];
   };
 }

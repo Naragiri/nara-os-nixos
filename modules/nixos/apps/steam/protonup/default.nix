@@ -7,9 +7,6 @@ in {
     enable = mkEnableOption "Enable protonup.";
   };
 
-  config = mkIf cfg.enable { 
-    environment.systemPackages = with pkgs; [
-      protonup
-    ];
-  };
+  config =
+    mkIf cfg.enable { environment.systemPackages = with pkgs; [ protonup ]; };
 }

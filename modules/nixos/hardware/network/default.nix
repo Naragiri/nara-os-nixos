@@ -11,8 +11,6 @@ in {
     networking.firewall.enable = true;
     networking.networkmanager.enable = true;
 
-    environment.systemPackages = with pkgs; [
-      networkmanagerapplet
-    ];
+    environment.systemPackages = with pkgs; [ networkmanagerapplet ];
   };
 }

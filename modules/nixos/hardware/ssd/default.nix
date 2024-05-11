@@ -7,7 +7,5 @@ in {
     enable = mkEnableOption "Enable ssd.";
   };
 
-  config = mkIf cfg.enable { 
-    services.fstrim.enable = true;
-  };
+  config = mkIf cfg.enable { services.fstrim.enable = true; };
 }

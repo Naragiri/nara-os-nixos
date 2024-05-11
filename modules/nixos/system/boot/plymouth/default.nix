@@ -10,7 +10,7 @@ in {
   config = mkIf cfg.enable {
     boot = {
       initrd.systemd.enable = true;
-      kernelParams = ["quiet" "splash"];
+      kernelParams = [ "quiet" "splash" ];
       plymouth.enable = true;
     };
   };

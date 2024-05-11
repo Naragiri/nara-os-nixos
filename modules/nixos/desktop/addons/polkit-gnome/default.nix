@@ -10,8 +10,8 @@ in {
   config = mkIf cfg.enable {
     security.polkit.enable = true;
     systemd = {
-      user.services.polkit-gnome = {
-        description = "polkit-gnome";
+      user.services.polkit-gnome-authentication-agent-1 = {
+        description = "polkit-gnome-authentication-agent-1";
         wantedBy = [ "graphical-session.target" ];
         wants = [ "graphical-session.target" ];
         after = [ "graphical-session.target" ];

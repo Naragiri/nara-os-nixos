@@ -7,9 +7,6 @@ in {
     enable = mkEnableOption "Enable snixembed.";
   };
 
-  config = mkIf cfg.enable { 
-    environment.systemPackages = with pkgs; [
-      snixembed
-    ];
-  };
+  config =
+    mkIf cfg.enable { environment.systemPackages = with pkgs; [ snixembed ]; };
 }

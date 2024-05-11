@@ -79,8 +79,6 @@
       templates = import ./templates { };
 
       outputs-builder = channels: {
-        formatter = channels.nixpkgs.treefmt;
-
         checks.pre-commit-check =
           inputs.pre-commit-hooks.lib.${channels.nixpkgs.system}.run {
             src = ./.;

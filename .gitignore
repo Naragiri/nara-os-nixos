@@ -2,3 +2,4 @@ result
 *.bak
 
 .direnv/
+.pre-commit-config.yaml

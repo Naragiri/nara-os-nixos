@@ -1,2 +1,6 @@
-{ pkgs, ... }:
-pkgs.mkShell { nativeBuildInputs = with pkgs; [ alejandra nixfmt treefmt ]; }
+{ pkgs, inputs, channels, ... }:
+pkgs.mkShell {
+  inherit (inputs.self.checks.${channels.nixpkgs.system}.pre-commit-check)
+    shellHook;
+  nativeBuildInputs = with pkgs; [ nixfmt treefmt ];
+}

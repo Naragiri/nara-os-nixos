@@ -8,6 +8,7 @@ in {
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       btop
+      gparted
       gptfdisk
       killall
       man
