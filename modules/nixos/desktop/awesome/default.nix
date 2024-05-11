@@ -75,6 +75,7 @@ in {
             };
           };
         };
+        snixembed = enabled;
       };
     };
 

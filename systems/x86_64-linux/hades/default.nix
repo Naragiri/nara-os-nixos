@@ -43,7 +43,6 @@ with lib.nos; {
       ani-cli = enabled;
       fastfetch = enabled;
       lf = enabled;
-      snixembed = enabled;
     };
     desktop.awesome = enabled;
     hardware = {

@@ -1,9 +1,9 @@
 { lib, config, pkgs, ... }:
 with lib;
 with lib.nos;
-let cfg = config.nos.cli-apps.snixembed;
+let cfg = config.nos.desktop.addons.snixembed;
 in {
-  options.nos.cli-apps.snixembed = with types; {
+  options.nos.desktop.addons.snixembed = with types; {
     enable = mkEnableOption "Enable snixembed.";
   };
 
