@@ -28,6 +28,7 @@ with lib.nos; {
       qbittorrent = enabled;
       spotify = enabled;
       steam = enabled // {
+        protonup = enabled;
         rom-manager = enabled;
         steamos = enabled;
       };
@@ -42,6 +43,7 @@ with lib.nos; {
       ani-cli = enabled;
       fastfetch = enabled;
       lf = enabled;
+      snixembed = enabled;
     };
     desktop.awesome = enabled;
     hardware = {
