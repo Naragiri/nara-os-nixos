@@ -5,6 +5,7 @@ let cfg = config.nos.system.boot.grub;
 in {
   options.nos.system.boot.grub = {
     enable = mkEnableOption "Enable grub.";
+    installAsRemovable = mkEnableOption "Enable efiInstallAsRemovable.";
     useOSProber =
       mkEnableOption "Use os-prober to detect other operating systems.";
   };
@@ -17,11 +18,12 @@ in {
       };
       grub = {
         efiSupport = true;
+        efiInstallAsRemovable = cfg.installAsRemovable;
         device = "nodev";
         configurationLimit = 30;
         useOSProber = cfg.useOSProber;
       };
-      timeout = 5;
+      timeout = mkDefault 5;
     };
   };
 }

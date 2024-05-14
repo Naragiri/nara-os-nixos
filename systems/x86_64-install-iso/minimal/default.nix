@@ -8,14 +8,11 @@ with lib.nos; {
   nos = {
     cli-apps = {
       lf = enabled;
-      neofetch = enabled;
+      fastfetch = enabled;
     };
     hardware = { network = enabled; };
     services = { openssh = enabled; };
-    system = {
-      boot.systemd = enabled;
-      security = { doas = enabled; };
-    };
+    system = { security = { doas = enabled; }; };
     tools = {
       common = enabled;
       direnv = enabled;
@@ -25,4 +22,10 @@ with lib.nos; {
     };
     user.name = "nixos";
   };
+
+  security.doas.extraRules = [{
+    users = [ "nixos" ];
+    keepEnv = true;
+    noPass = true;
+  }];
 }

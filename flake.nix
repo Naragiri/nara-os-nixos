@@ -74,7 +74,7 @@
 
       systems.hosts.hades.modules = [ ./disks/hades.nix ];
 
-      systems.hosts.atlas.modules = [ ./disks/atlas.nix ];
+      systems.hosts.zeus.modules = [ ./disks/zeus.nix ];
 
       templates = import ./templates { };
 
