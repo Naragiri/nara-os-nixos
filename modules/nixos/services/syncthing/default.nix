@@ -17,6 +17,7 @@ in {
       configDir = "/home/${username}/.config/syncthing";
       user = "${username}";
       group = "${group}";
+      openDefaultPorts = true;
       settings = {
         devices = {
           "hades" = {
