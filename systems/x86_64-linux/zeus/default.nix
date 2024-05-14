@@ -39,6 +39,7 @@ with lib.nos; {
     services = {
       flatpak = enabled;
       openssh = enabled;
+      syncthing = enabled;
     };
     system = {
       battery = enabled;

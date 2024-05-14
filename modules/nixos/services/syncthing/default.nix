@@ -23,12 +23,15 @@ in {
             id =
               "NPFCSL2-FDX65IN-6757H2F-6BBOONP-RX77E5C-3UQGUBF-MSUB43U-VUCWCQF";
           };
-          # "zeus" = { id = "1"; };
+          "zeus" = {
+            id =
+              "4UBD4LD-AUTHPUL-UFMZWM7-NIGYI4E-RT4X7WC-WGUYPA5-MXZGYQD-6W6A6QH";
+          };
         };
         folders = {
           "Repos" = {
             path = "/home/${username}/Repos";
-            devices = [ "hades" ];
+            devices = [ "hades" "zeus" ];
             versioning = {
               type = "staggered";
               params = {
