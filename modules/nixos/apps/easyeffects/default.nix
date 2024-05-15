@@ -9,9 +9,6 @@ in {
   };
 
   config = mkIf cfg.enable {
-    # environment.systemPackages = with pkgs; [
-    #   easyeffects
-    # ];
     nos.home.extraOptions.services.easyeffects = {
       enable = true;
       preset = cfg.preset;
