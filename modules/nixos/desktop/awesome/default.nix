@@ -47,6 +47,7 @@ in {
         };
         picom = enabled;
         polkit-gnome = enabled;
+        redshift = enabled;
         rofi = enabled // {
           colorScheme = "nord";
           appLauncher = enabled // {
