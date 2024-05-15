@@ -10,6 +10,10 @@ with lib.nos; {
     apps = {
       brave = enabled;
       discord = enabled;
+      easyeffects = enabled // {
+        preset =
+          "ee_bryan_preset"; # https://community.frame.work/t/framework-16-sound-quality/46635
+      };
       firefox = enabled;
       minecraft = enabled;
       nemo = enabled;
@@ -59,6 +63,10 @@ with lib.nos; {
       zoxide = enabled;
     };
   };
+
+  services.xserver.displayManager.setupCommands = with pkgs; ''
+    ${getExe xorg.xrandr} --output eDP-2 --scale 0.8x0.8
+  '';
 
   services.fwupd.enable = true;
 
