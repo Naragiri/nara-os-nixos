@@ -38,6 +38,7 @@ with lib.nos; {
           package = pkgs.nos.vscode-just-black;
         };
       };
+      xivlauncher = enabled;
     };
     cli-apps = {
       ani-cli = enabled;

@@ -19,6 +19,9 @@ in {
       (mkIf cfg.theme.enable { theme = cfg.theme.name; })
     ];
 
+    security.pam.services.sddm.enableGnomeKeyring =
+      config.nos.desktop.addons.gnome-keyring.enable;
+
     environment.systemPackages = with pkgs;
       [
         libsForQt5.qt5.qtgraphicaleffects

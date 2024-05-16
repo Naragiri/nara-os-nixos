@@ -27,6 +27,7 @@ in {
 
     nos.desktop = {
       addons = {
+        gnome-keyring = enabled;
         gtk = enabled // {
           cursorTheme = {
             name = "Simp1e-Adw-Dark";
