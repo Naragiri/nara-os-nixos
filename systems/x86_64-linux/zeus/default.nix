@@ -49,7 +49,7 @@ with lib.nos; {
       battery = enabled;
       boot = {
         plymouth = enabled;
-        systemd = enabled;
+        lanzaboote = enabled;
       };
       security = { doas = enabled; };
     };
