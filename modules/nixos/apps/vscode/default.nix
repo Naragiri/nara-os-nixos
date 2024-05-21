@@ -92,13 +92,14 @@ in {
   };
 
   config = mkIf cfg.enable {
-    environment.shellAliases = { "c" = "code ."; };
+    environment.shellAliases = { "c" = "codium ."; };
 
     nos.home.extraOptions.programs.vscode = {
       enable = true;
       extensions = vsc-extensions;
       keybindings = vsc-keybindings;
       mutableExtensionsDir = false;
+      package = pkgs.vscodium;
       userSettings = vsc-user-settings;
     };
   };

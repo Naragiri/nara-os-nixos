@@ -39,7 +39,7 @@ in {
           shadow-offset-y = -18;
 
           opacity-rule = [
-            "90:class_g = 'Code'"
+            "90:class_g = 'VSCodium'"
             "95:class_g = 'discord'"
             "90:class_g = 'Rofi'"
           ];

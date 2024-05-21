@@ -9,12 +9,12 @@ with lib.nos; {
   nos = {
     apps = {
       discord = enabled;
+      chromium = enabled;
       easyeffects = enabled // {
         preset =
           "ee_bryan_preset"; # https://community.frame.work/t/framework-16-sound-quality/46635
       };
       firefox = enabled;
-      librewolf = enabled;
       minecraft = enabled;
       nemo = enabled;
       pqiv = enabled;
