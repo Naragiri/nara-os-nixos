@@ -48,5 +48,12 @@ in {
     nos.home.configFile."pqivrc" = {
       text = lib.concatLines [ (generators.toINI { } settings) extraConfig ];
     };
+
+    nos.home.extraOptions.xdg.mimeApps.defaultApplications = {
+      "image/jpeg" = "pqiv.desktop";
+      "image/gif" = "pqiv.desktop";
+      "image/webp" = "pqiv.desktop";
+      "image/png" = "pqiv.desktop";
+    };
   };
 }

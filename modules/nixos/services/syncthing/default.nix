@@ -1,10 +1,28 @@
 { lib, config, pkgs, ... }:
 with lib;
 with lib.nos;
-let cfg = config.nos.services.syncthing;
+let
+  cfg = config.nos.services.syncthing;
+  default-versioning = {
+    type = "staggered";
+    params = {
+      cleanInterval = "3600"; # 1 hour
+      maxAge = "7776000"; # 90 days
+    };
+  };
+  folder-submodule = with types;
+    submodule {
+      options = {
+        path = mkStrOpt "" "The path to sync from/to.";
+        devices = mkOpt (listOf str) [ ] "The devices to sync to.";
+        versioning = mkOpt attrs default-versioning "The versioning data.";
+      };
+    };
 in {
   options.nos.services.syncthing = with types; {
     enable = mkEnableOption "Enable syncthing.";
+    extraFolders =
+      mkOpt (attrsOf folder-submodule) { } "Extra folders to sync.";
   };
 
   config = mkIf cfg.enable {
@@ -33,15 +51,11 @@ in {
           "Repos" = {
             path = "/home/${username}/Repos";
             devices = [ "hades" "zeus" ];
-            versioning = {
-              type = "staggered";
-              params = {
-                cleanInterval = "3600"; # 1 hour
-                maxAge = "7776000"; # 90 days
-              };
-            };
+            versioning = default-versioning;
           };
-        };
+        } // (mapAttrs
+          (name: attrs: { inherit (attrs) path devices versioning; })
+          cfg.extraFolders);
       };
     };
   };

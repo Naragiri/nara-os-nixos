@@ -83,11 +83,12 @@ in {
 
     nos.home.configFile = let getDir = file: "awesome/bin/nix/${file}";
     in {
-      "${getDir "appLauncher.sh"}".source = pkgs.writeScript "app-launcher" ''
-        ${
-          getExe pkgs.rofi
-        } -show drun -theme /home/${config.nos.user.name}/.config/rofi/app-launcher.rasi
-      '';
+      "${getDir "appLauncher.sh"}".source = getExe
+        (pkgs.writeShellScriptBin "app-launcher" ''
+          ${
+            getExe pkgs.rofi
+          } -show drun -theme /home/${config.nos.user.name}/.config/rofi/app-launcher.rasi
+        '');
     };
 
     xdg.portal = enabled // {
