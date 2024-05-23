@@ -16,7 +16,7 @@ in {
     };
 
     nos.apps = {
-      terminal.kitty = enabled // { theme = "Nord"; };
+      terminal.kitty = enabled;
       vscode = {
         extraExtensions = with pkgs; [
           nos.vscode-local-lua-debugger
@@ -78,12 +78,13 @@ in {
           };
         };
         snixembed = enabled;
+        wallpapers = enabled;
       };
     };
 
-    nos.home.configFile = let getDir = file: "awesome/bin/nix/${file}";
+    nos.home.configFile = let getDir = file: "awesome/bin/${file}";
     in {
-      "${getDir "appLauncher.sh"}".source = getExe
+      "${getDir "app_launcher.sh"}".source = getExe
         (pkgs.writeShellScriptBin "app-launcher" ''
           ${
             getExe pkgs.rofi

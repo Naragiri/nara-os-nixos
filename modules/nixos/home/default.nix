@@ -17,6 +17,8 @@ with lib.nos; {
       home.stateVersion = config.system.stateVersion;
       home.file = mkAliasDefinitions options.nos.home.file;
       xdg.enable = true;
+      xdg.mime.enable = true;
+      xdg.mimeApps.enable = true;
       xdg.configFile = mkAliasDefinitions options.nos.home.configFile;
     };
 

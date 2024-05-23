@@ -8,8 +8,8 @@ with lib.nos; {
 
   nos = {
     apps = {
-      brave = enabled;
       chatterino = enabled;
+      chromium = enabled;
       discord = enabled;
       emulators = {
         citra = enabled;

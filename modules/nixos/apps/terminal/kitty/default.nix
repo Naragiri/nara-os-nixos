@@ -5,7 +5,7 @@ let cfg = config.nos.apps.terminal.kitty;
 in {
   options.nos.apps.terminal.kitty = with types; {
     enable = mkEnableOption "Enable kitty.";
-    theme = mkStrOpt "" "The theme to apply to kitty.";
+    theme = mkNullOpt str null "The theme to apply to kitty.";
     extraConfig = mkOpt (attrsOf str) { } "Extra config to apply to kitty.";
   };
 
