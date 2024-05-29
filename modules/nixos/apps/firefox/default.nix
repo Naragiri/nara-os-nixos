@@ -72,6 +72,8 @@ let
 in {
   options.nos.apps.firefox = with types; {
     enable = mkEnableOption "Enable firefox with custom config.";
+    makeDefaultBrowser =
+      mkEnableOption "Make firefox the default browser (mimeapps).";
     settings =
       mkOpt attrs defaultUserSettings "Settings to apply to the user profile.";
     userChrome = mkOpt str "" "Extra config for the user chrome file.";
@@ -81,86 +83,101 @@ in {
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ firefox ];
 
-    nos.home.extraOptions.programs.firefox = enabled // {
-      policies = {
-        DefaultDownloadDirectory = "/home/${config.nos.user.name}/Downloads";
-        DisablePocket = true;
-        DisableTelemetry = true;
-        FirefoxSuggest = {
-          WebSuggestions = false;
-          SponsoredSuggestions = false;
-          ImproveSuggest = false;
+    nos.home.extraOptions = {
+      programs.firefox = enabled // {
+        policies = {
+          DefaultDownloadDirectory = "/home/${config.nos.user.name}/Downloads";
+          DisablePocket = true;
+          DisableTelemetry = true;
+          FirefoxSuggest = {
+            WebSuggestions = false;
+            SponsoredSuggestions = false;
+            ImproveSuggest = false;
+          };
+          OfferToSaveLogins = false;
         };
-        OfferToSaveLogins = false;
-      };
-      profiles.${config.nos.user.name} = {
-        inherit (cfg) extraConfig userChrome settings;
-        name = config.nos.user.name;
-        id = 0;
-        bookmarks = [{
-          name = "Nix";
-          toolbar = true;
-          bookmarks = [
-            {
-              name = "NixOS Homepage";
-              url = "https://nixos.org/";
-            }
-            {
-              name = "Home Manager Options";
-              url = "https://home-manager-options.extranix.com";
-            }
-            {
-              name = "NixOS Wiki";
-              url = "https://nixos.wiki/";
-            }
-          ];
-        }];
-        search = {
-          default = "DuckDuckGo";
-          force = true;
-          engines = {
-            "Nix Packages" = {
-              urls = [{
-                template = "https://search.nixos.org/packages";
-                params = [
-                  {
-                    name = "type";
-                    value = "packages";
-                  }
-                  {
+        profiles.${config.nos.user.name} = {
+          inherit (cfg) extraConfig userChrome settings;
+          name = config.nos.user.name;
+          id = 0;
+          bookmarks = [{
+            name = "Nix";
+            toolbar = true;
+            bookmarks = [
+              {
+                name = "NixOS Homepage";
+                url = "https://nixos.org/";
+              }
+              {
+                name = "Home Manager Options";
+                url = "https://home-manager-options.extranix.com";
+              }
+              {
+                name = "NixOS Wiki";
+                url = "https://nixos.wiki/";
+              }
+            ];
+          }];
+          search = {
+            default = "DuckDuckGo";
+            force = true;
+            engines = {
+              "Nix Packages" = {
+                urls = [{
+                  template = "https://search.nixos.org/packages";
+                  params = [
+                    {
+                      name = "type";
+                      value = "packages";
+                    }
+                    {
+                      name = "query";
+                      value = "{searchTerms}";
+                    }
+                  ];
+                }];
+
+                icon =
+                  "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                definedAliases = [ "@np" ];
+              };
+              "Home Manager Options" = {
+                urls = [{
+                  template = "https://home-manager-options.extranix.com";
+                  params = [{
                     name = "query";
                     value = "{searchTerms}";
-                  }
-                ];
-              }];
-
-              icon =
-                "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-              definedAliases = [ "@np" ];
-            };
-            "Home Manager Options" = {
-              urls = [{
-                template = "https://home-manager-options.extranix.com";
-                params = [{
-                  name = "query";
-                  value = "{searchTerms}";
+                  }];
                 }];
-              }];
 
-              icon =
-                "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
-              definedAliases = [ "@hm" ];
-            };
-            "NixOS Wiki" = {
-              urls = [{
-                template = "https://nixos.wiki/index.php?search={searchTerms}";
-              }];
-              iconUpdateURL = "https://nixos.wiki/favicon.png";
-              updateInterval = 24 * 60 * 60 * 1000;
-              definedAliases = [ "@nw" ];
+                icon =
+                  "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+                definedAliases = [ "@hm" ];
+              };
+              "NixOS Wiki" = {
+                urls = [{
+                  template =
+                    "https://nixos.wiki/index.php?search={searchTerms}";
+                }];
+                iconUpdateURL = "https://nixos.wiki/favicon.png";
+                updateInterval = 24 * 60 * 60 * 1000;
+                definedAliases = [ "@nw" ];
+              };
             };
           };
         };
+      };
+      xdg.mimeApps.defaultApplications = mkIf cfg.makeDefaultBrowser {
+        "x-scheme-handler/http" = "firefox.desktop";
+        "x-scheme-handler/https" = "firefox.desktop";
+        "x-scheme-handler/chrome" = "firefox.desktop";
+        "text/html" = "firefox.desktop";
+        "application/x-extension-htm" = "firefox.desktop";
+        "application/x-extension-html" = "firefox.desktop";
+        "application/x-extension-shtml" = "firefox.desktop";
+        "application/xhtml+xml" = "firefox.desktop";
+        "application/x-extension-xhtml" = "firefox.desktop";
+        "application/x-extension-xht" = "firefox.desktop";
       };
     };
   };

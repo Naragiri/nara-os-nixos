@@ -1,0 +1,22 @@
+{
+    "sddm-sugar-candy": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "sddm-sugar-candy",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "Kangie",
+            "repo": "sddm-sugar-candy",
+            "rev": "v1.6",
+            "sha256": "sha256-p2d7I0UBP63baW/q9MexYJQcqSmZ0L5rkwK3n66gmqM=",
+            "type": "github"
+        },
+        "version": "v1.6"
+    }
+}

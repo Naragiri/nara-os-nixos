@@ -10,7 +10,9 @@ in {
   config = mkIf cfg.enable {
     services.xserver = enabled // {
       windowManager.awesome = enabled // {
-        package = pkgs.nos.awesome;
+        package = pkgs.nos.awesome-luajit-git.override {
+          extraGIPackages = with pkgs; [ upower ];
+        };
         luaModules = with pkgs.luaPackages; [ luarocks ];
       };
     };
@@ -68,7 +70,7 @@ in {
                 General = {
                   AccentColor = "#efefef";
                   Background =
-                    "${pkgs.nos.nos-wallpapers}/wallhaven-d6qj13.png";
+                    "${pkgs.nos.nos-wallpapers}/wallhaven-r2g7rm.jpg";
                   FormPosition = "center";
                   FullBlur = "true";
                   PartialBlur = "false";

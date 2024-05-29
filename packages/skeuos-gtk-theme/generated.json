@@ -1,0 +1,22 @@
+{
+    "skeuos-gtk-theme": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "skeuos-gtk-theme",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "daniruiz",
+            "repo": "skeuos-gtk",
+            "rev": "20220629",
+            "sha256": "sha256-cfVe6/M64wcf0WVbC+sGwsZjg9t70+5+lIf5j5fqz2w=",
+            "type": "github"
+        },
+        "version": "20220629"
+    }
+}

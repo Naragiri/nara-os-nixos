@@ -1,14 +1,9 @@
-{ fetchFromGitHub, lib, nerdfonts, stdenvNoCC }:
-stdenvNoCC.mkDerivation rec {
+{ pkgs, lib, nerdfonts, stdenvNoCC }:
+let
   pname = "rofi-themes";
-  version = "1.7.4";
-  src = fetchFromGitHub {
-    owner = "adi1090x";
-    repo = "rofi";
-    rev = "7e236dd67fd98304e1be9e9adc2bed9106cf895b";
-    sha256 = "K6WQ+olSy6Rorof/EGi9hP2WQpRONjuGREby+aBlzYg=";
-    fetchSubmodules = false;
-  };
+  source = (pkgs.callPackages ./generated.nix { }).${pname};
+in stdenvNoCC.mkDerivation rec {
+  inherit (source) pname version src;
 
   buildInputs =
     [ (nerdfonts.override { fonts = [ "JetBrainsMono" "Iosevka" ]; }) ];

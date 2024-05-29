@@ -1,0 +1,22 @@
+{
+    "rofi-themes": {
+        "cargoLocks": null,
+        "date": "2024-05-18",
+        "extract": null,
+        "name": "rofi-themes",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "adi1090x",
+            "repo": "rofi",
+            "rev": "6cdcf5b7cb844b10f704bde46c2a23420653eba5",
+            "sha256": "sha256-YjyrxappcLDoh3++mtZqCyxQV2qeoNhhUy2XGwlyTng=",
+            "type": "github"
+        },
+        "version": "6cdcf5b7cb844b10f704bde46c2a23420653eba5"
+    }
+}

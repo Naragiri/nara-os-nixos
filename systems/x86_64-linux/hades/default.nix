@@ -17,7 +17,7 @@ with lib.nos; {
         pcsx2 = enabled;
         yuzu = enabled;
       };
-      firefox = enabled;
+      firefox = enabled // { makeDefaultBrowser = true; };
       launchers = {
         heroic = enabled;
         lutris = enabled;

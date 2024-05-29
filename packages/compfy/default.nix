@@ -1,14 +1,9 @@
-{ pkgs, fetchFromGitHub, ... }:
-pkgs.picom.overrideAttrs (oldAttrs: rec {
+{ pkgs, ... }:
+let
   pname = "compfy";
-  version = "1.7.2";
-
-  src = pkgs.fetchFromGitHub {
-    owner = "allusive-dev";
-    repo = "compfy";
-    rev = version;
-    sha256 = "7hvzwLEG5OpJzsrYa2AaIW8X0CPyOnTLxz+rgWteNYY=";
-  };
+  source = (pkgs.callPackages ./generated.nix { }).${pname};
+in pkgs.picom.overrideAttrs (oldAttrs: rec {
+  inherit (source) pname version src;
 
   buildInputs = with pkgs; [ pcre2 ] ++ oldAttrs.buildInputs;
   postInstall = "";

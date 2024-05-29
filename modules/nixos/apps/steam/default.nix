@@ -216,7 +216,7 @@ in {
     };
 
     environment.systemPackages = with pkgs;
-      [ mangohud ] ++ optionals (cfg.steamos.enable) [
+      [ mangohud protontricks winetricks ] ++ optionals (cfg.steamos.enable) [
         (makeDesktopItem {
           name = "Steam (Gamepad UI)";
           desktopName = "Steam (Gamepad UI)";

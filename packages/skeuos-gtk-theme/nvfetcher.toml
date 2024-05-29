@@ -1,0 +1,3 @@
+[skeuos-gtk-theme]
+src.github_tag = "daniruiz/skeuos-gtk"
+fetch.github = "daniruiz/skeuos-gtk"
