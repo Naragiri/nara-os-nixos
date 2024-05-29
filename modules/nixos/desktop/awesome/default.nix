@@ -9,6 +9,7 @@ in {
 
   config = mkIf cfg.enable {
     services.xserver = enabled // {
+      displayManager.defaultSession = "none+awesome";
       windowManager.awesome = enabled // {
         package = pkgs.nos.awesome-luajit-git.override {
           extraGIPackages = with pkgs; [ upower ];
