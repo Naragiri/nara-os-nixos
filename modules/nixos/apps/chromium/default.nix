@@ -48,7 +48,7 @@ in {
     enable = mkEnableOption "Enable chromium.";
     extensions =
       mkOpt (listOf attrs) default-extensions "Extensions to add to chromium.";
-    package = mkOpt package pkgs.ungoogled-chromium "The chromium package.";
+    package = mkOpt package pkgs.brave "The chromium package.";
   };
 
   config = mkIf cfg.enable {

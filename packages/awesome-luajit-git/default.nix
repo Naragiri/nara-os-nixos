@@ -2,10 +2,11 @@
 let
   pname = "awesome";
   source = (pkgs.callPackages ./generated.nix { }).${pname};
-in (pkgs.awesome.override { gtk3Support = true; }).overrideAttrs
-(oldAttrs: rec {
-  inherit (source) pname version src;
+in (pkgs.awesome.override {
   lua = pkgs.luajit;
+  gtk3Support = true;
+}).overrideAttrs (oldAttrs: rec {
+  inherit (source) pname version src;
 
   GI_TYPELIB_PATH = let
     mkTypeLibPath = pkg: "${pkg}/lib/girepository-1.0";
