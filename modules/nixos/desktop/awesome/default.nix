@@ -12,7 +12,7 @@ in {
       displayManager.defaultSession = "none+awesome";
       windowManager.awesome = enabled // {
         package = pkgs.nos.awesome-git.override {
-          lua = "lua";
+          luaVersion = "lua";
           extraGIPackages = with pkgs; [ upower ];
         };
         luaModules = with pkgs.luaPackages; [ luarocks ];
