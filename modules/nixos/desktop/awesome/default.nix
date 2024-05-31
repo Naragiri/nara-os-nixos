@@ -11,7 +11,8 @@ in {
     services.xserver = enabled // {
       displayManager.defaultSession = "none+awesome";
       windowManager.awesome = enabled // {
-        package = pkgs.nos.awesome-luajit-git.override {
+        package = pkgs.nos.awesome-git.override {
+          lua = "lua";
           extraGIPackages = with pkgs; [ upower ];
         };
         luaModules = with pkgs.luaPackages; [ luarocks ];
