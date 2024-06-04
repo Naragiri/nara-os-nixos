@@ -16,6 +16,9 @@ in {
       rsync
       tldr
       wget
+      file
+      unzip
+      p7zip
       zip
     ];
   };

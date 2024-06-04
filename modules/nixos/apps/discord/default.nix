@@ -20,10 +20,11 @@ in {
 
     environment.systemPackages = with pkgs;
       [
-        (discord.override {
-          withOpenASAR = true;
-          withVencord = true;
-        })
+        # (discord.override {
+        #   withOpenASAR = true;
+        #   withVencord = true;
+        # })
+        vesktop
       ];
   };
 }

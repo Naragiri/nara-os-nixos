@@ -13,7 +13,7 @@ in {
   };
 
   config = mkIf cfg.enable {
-    services.xserver.displayManager.sddm = mkMerge [
+    services.displayManager.sddm = mkMerge [
       enabled
       { autoNumlock = true; }
       (mkIf cfg.theme.enable { theme = cfg.theme.name; })

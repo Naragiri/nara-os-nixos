@@ -19,9 +19,6 @@ with lib.nos; {
 
     console = { keyMap = mkForce "us"; };
 
-    services.xserver = {
-      layout = "${config.console.keyMap}";
-      xkb = { layout = "${config.console.keyMap}"; };
-    };
+    services.xserver.xkb = { layout = "${config.console.keyMap}"; };
   };
 }

@@ -5,7 +5,7 @@ writeShellScriptBin "nos" ''
   }
 
   update() {
-    nix flake update $FLAKE_DIR
+    nix flake update --flake $FLAKE_DIR
   }
 
   clean() {

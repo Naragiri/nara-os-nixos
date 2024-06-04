@@ -33,7 +33,7 @@ in {
       dotDir = ".config/zsh";
       history.expireDuplicatesFirst = true;
       enableCompletion = true;
-      enableAutosuggestions = true;
+      autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
     };
   };

@@ -42,6 +42,12 @@ let
       sha256 = "sha256:10j4hq8npdrvmlry8j8k1libxf7r6r2195mf6bsd2kfxdhxfx8q8";
       version = "0.5.0";
     })
+    (createChromiumExtension {
+      # clearurls
+      id = "lckanjgmijmafbedllaakclkaicjfmnk";
+      sha256 = "sha256:0mdqa9w1p6cmli6976v4wi0sw9r4p5prkj7lzfd1877wk11c9c73";
+      version = "1.26.0";
+    })
   ];
 in {
   options.nos.apps.chromium = with types; {

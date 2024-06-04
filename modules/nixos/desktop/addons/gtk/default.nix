@@ -45,7 +45,7 @@ in {
       };
       qt = mkIf (cfg.qt.enable) {
         enable = true;
-        platformTheme = "gtk";
+        platformTheme.name = "gtk";
       };
     };
   };

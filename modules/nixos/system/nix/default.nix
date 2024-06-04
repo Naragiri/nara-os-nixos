@@ -3,13 +3,6 @@ with lib;
 with lib.nos;
 let cfg = config.nos.system.nix;
 in {
-  options.nos.system.nix = with types; {
-    extraSubstituters =
-      mkOpt (listOf str) [ ] "Additional cachix substituters.";
-    extraTrustedPublicKeys =
-      mkOpt (listOf str) [ ] "Additional publickeys for cachix substituters.";
-  };
-
   config = {
     environment.systemPackages = with pkgs; [ deploy-rs ];
 
@@ -26,10 +19,6 @@ in {
         allowed-users = users;
         keep-outputs = true;
         keep-derivations = true;
-
-        # Mainly for hyprland.
-        substituters = cfg.extraSubstituters;
-        trusted-public-keys = cfg.extraTrustedPublicKeys;
       };
 
       gc = {

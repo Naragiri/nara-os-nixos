@@ -8,14 +8,16 @@ in {
   };
 
   config = mkIf cfg.enable {
-    services.xserver = enabled // {
+    services = {
       displayManager.defaultSession = "none+awesome";
-      windowManager.awesome = enabled // {
-        package = pkgs.nos.awesome-git.override {
-          luaVersion = "lua";
-          extraGIPackages = with pkgs; [ upower ];
+      xserver = enabled // {
+        windowManager.awesome = enabled // {
+          package = pkgs.nos.awesome-git.override {
+            luaVersion = "lua";
+            extraGIPackages = with pkgs; [ upower ];
+          };
+          luaModules = with pkgs.luaPackages; [ luarocks ];
         };
-        luaModules = with pkgs.luaPackages; [ luarocks ];
       };
     };
 
@@ -90,11 +92,11 @@ in {
     in {
       "${getDir "app_launcher.sh"}".source = getExe
         (pkgs.writeShellScriptBin "app-launcher" ''
-          ${
-            getExe pkgs.rofi
-          } -show drun -theme /home/${config.nos.user.name}/.config/rofi/app-launcher.rasi
+          rofi -show drun -theme /home/${config.nos.user.name}/.config/rofi/app-launcher.rasi
         '');
     };
+
+    environment.systemPackages = with pkgs; [ rofi ];
 
     xdg.portal = enabled // {
       config.common.default = "*";

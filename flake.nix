@@ -8,8 +8,7 @@
     yuzu-fix.url =
       "github:nixos/nixpkgs/d89fdbfc985022d183073cb52df4d35b791d42cf";
 
-    old-minecraft.url =
-      "github:nixos/nixpkgs/8e644bcfa7afa8045ff717b119126c709b41bf3f";
+    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
 
     deploy-rs = {
       url = "github:serokell/deploy-rs";
@@ -22,7 +21,7 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
+      url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
