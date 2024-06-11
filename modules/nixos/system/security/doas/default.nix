@@ -10,6 +10,8 @@ in {
   config = mkIf cfg.enable {
     environment.shellAliases = { sudo = "doas"; };
 
+    environment.systemPackages = with pkgs; [ doas-sudo-shim ];
+
     security = {
       sudo.enable = false;
 
