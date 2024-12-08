@@ -1,4 +1,4 @@
-_: prev: {
+_: _: prev: {
   vscode-extensions =
     let
       mkVscodeExtensionFromSource =

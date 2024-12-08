@@ -12,20 +12,19 @@ let
     types
     getExe
     ;
-  inherit (lib.nos.vscode) mkVscodeModule enabled;
+  inherit (lib.nos.vscode) mkVscodeModule;
 
   cfg = config.nos.apps.vscode;
 
   # Copied from https://github.com/kubukoz/nix-config/blob/ad845b8dfd96ae53b1cb6be92687942e55641912/vscode/default.nix
-  vscodeModule =
-    mkVscodeModule {
-      inherit (cfg) package;
-      enableExtensionUpdateCheck = false;
-      enableUpdateCheck = false;
-      userSettings = import ./settings.nix;
-      keybindings = import ./keybindings.nix { inherit lib; };
-    }
-    // enabled;
+  vscodeModule = mkVscodeModule {
+    inherit (cfg) package;
+    enable = true;
+    enableExtensionUpdateCheck = false;
+    enableUpdateCheck = false;
+    userSettings = import ./settings.nix;
+    keybindings = import ./keybindings.nix { inherit lib; };
+  };
 in
 {
   imports = [
