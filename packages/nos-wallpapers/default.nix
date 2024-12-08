@@ -1,7 +1,15 @@
-{ lib, stdenvNoCC }:
-stdenvNoCC.mkDerivation rec {
+{
+  pkgs,
+  stdenvNoCC,
+  ...
+}:
+let
   name = "nos-wallpapers";
-  src = ./wallpapers;
+  source = (pkgs.callPackages ./generated.nix { }).${name};
+in
+stdenvNoCC.mkDerivation {
+  inherit name;
+  inherit (source) src;
 
   installPhase = ''
     mkdir -p $out

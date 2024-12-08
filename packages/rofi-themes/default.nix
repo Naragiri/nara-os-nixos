@@ -1,12 +1,23 @@
-{ pkgs, lib, nerdfonts, stdenvNoCC }:
+{
+  pkgs,
+  nerdfonts,
+  stdenvNoCC,
+}:
 let
   pname = "rofi-themes";
   source = (pkgs.callPackages ./generated.nix { }).${pname};
-in stdenvNoCC.mkDerivation rec {
+in
+stdenvNoCC.mkDerivation {
   inherit (source) pname version src;
 
-  buildInputs =
-    [ (nerdfonts.override { fonts = [ "JetBrainsMono" "Iosevka" ]; }) ];
+  buildInputs = [
+    (nerdfonts.override {
+      fonts = [
+        "JetBrainsMono"
+        "Iosevka"
+      ];
+    })
+  ];
 
   installPhase = ''
     runHook preInstall

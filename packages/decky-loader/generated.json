@@ -1,0 +1,17 @@
+{
+    "decky-loader": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "decky-loader",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": null,
+            "sha256": "sha256-94pQL/fmpApP+suku4a/q7nTTf/zqVaT5rbVowEFYPY=",
+            "type": "url",
+            "url": "https://github.com/SteamDeckHomebrew/decky-loader/releases/download/v3.0.4/PluginLoader"
+        },
+        "version": "v3.0.4"
+    }
+}

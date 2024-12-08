@@ -1,36 +1,60 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.system.fonts;
-in {
-  options.nos.system.fonts = with types; {
-    terminus.enable = mkBoolOpt true "Enable terminus-fonts.";
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib)
+    mkIf
+    mkOption
+    types
+    ;
+  inherit (lib.nos) mkEnabledOption enabled;
+  cfg = config.nos.system.fonts;
+in
+{
+  options.nos.system.fonts = {
+    terminus.enable = mkEnabledOption "Enable terminus fonts.";
     system = {
-      enable = mkBoolOpt true "Enable system fonts.";
-      extraFonts = mkOpt (listOf package) [ ] "Additional system fonts.";
+      enable = mkEnabledOption "Enable system fonts.";
+      extraFonts = mkOption {
+        default = [ ];
+        description = "Additional system fonts.";
+        type = types.listOf types.package;
+      };
     };
   };
 
-  config = let
-    systemFonts = with pkgs; [
-      noto-fonts
-      noto-fonts-emoji
-      font-awesome
-      fira-code-symbols
-      (nerdfonts.override {
-        fonts = [ "FiraCode" "JetBrainsMono" "CascadiaCode" ];
-      })
-    ];
-  in {
-    fonts = {
-      fontDir.enable = true;
+  config = {
+    fonts = mkIf cfg.system.enable {
+      fontDir = enabled;
       packages =
-        optionals (cfg.system.enable) (systemFonts ++ cfg.system.extraFonts);
+        [
+          pkgs.noto-fonts
+          pkgs.noto-fonts-emoji
+          pkgs.font-awesome
+          pkgs.fira-code-symbols
+          (pkgs.nerdfonts.override {
+            fonts = [
+              "FiraCode"
+              "JetBrainsMono"
+              "CascadiaCode"
+            ];
+          })
+        ]
+        # 25.05
+        # ++ (with pkgs.nerd-fonts; [
+        #   fira-code
+        #   jetbrains-mono
+        #   caskaydia-cove
+        # ])
+        ++ cfg.system.extraFonts;
     };
 
-    console = mkIf (cfg.terminus.enable) {
+    console = mkIf cfg.terminus.enable {
       earlySetup = true;
-      packages = with pkgs; [ terminus_font ];
+      packages = [ pkgs.terminus_font ];
       font = "ter-v22b";
     };
   };

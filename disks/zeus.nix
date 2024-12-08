@@ -1,4 +1,4 @@
-{ lib, ... }: {
+_: {
   disko.devices = {
     disk.sda = {
       type = "disk";
@@ -19,7 +19,12 @@
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot";
-              mountOptions = [ "uid=0" "gid=0" "fmask=0077" "dmask=0077" ];
+              mountOptions = [
+                "uid=0"
+                "gid=0"
+                "fmask=0077"
+                "dmask=0077"
+              ];
             };
           };
           swap = {
@@ -38,18 +43,29 @@
               type = "btrfs";
               extraArgs = [ "-f" ];
               subvolumes = {
-                "/root" = { mountpoint = "/"; };
+                "/root" = {
+                  mountpoint = "/";
+                };
                 "/nix" = {
-                  mountOptions = [ "compress=zstd" "noatime" ];
+                  mountOptions = [
+                    "compress=zstd"
+                    "noatime"
+                  ];
                   mountpoint = "/nix";
                 };
                 # impermanance
                 "/persist" = {
-                  mountOptions = [ "compress=zstd" "noatime" ];
+                  mountOptions = [
+                    "compress=zstd"
+                    "noatime"
+                  ];
                   mountpoint = "/persist";
                 };
                 "/home" = {
-                  mountOptions = [ "compress=zstd" "noatime" ];
+                  mountOptions = [
+                    "compress=zstd"
+                    "noatime"
+                  ];
                   mountpoint = "/home";
                 };
               };

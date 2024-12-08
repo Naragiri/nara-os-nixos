@@ -1,30 +1,42 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.apps.discord;
-in {
-  options.nos.apps.discord = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    mkOption
+    readFile
+    types
+    ;
+  cfg = config.nos.apps.discord;
+in
+{
+  options.nos.apps.discord = {
     enable = mkEnableOption "Enable discord.";
-    wallustTheme.enable = mkEnableOption "Enable wallust vencord theme.";
+    package = mkOption {
+      default = pkgs.vesktop;
+      description = "The package for discord.";
+      type = types.package;
+    };
   };
 
   config = mkIf cfg.enable {
-    nos.cli-apps.wallust.templates = mkIf (cfg.wallustTheme.enable) {
-      "vencord-theme.css" = {
-        new_engine = false;
-        text = readFile "${pkgs.nos.discord-wal-theme}/discord-wallust.css";
-        target =
-          "/home/${config.nos.user.name}/.config/Vencord/themes/discord-wallust.css";
-      };
+    nos.cli-apps.wallust.templates = mkIf config.nos.cli-apps.wallust.addons.vencord.enable {
+      "vencord-theme.css" =
+        let
+          file = "discord-wallust-beta";
+          folderName = if cfg.package == pkgs.vesktop then "vesktop" else "Vencord";
+        in
+        {
+          text = readFile "${pkgs.nos.discord-wal-theme}/${file}.css";
+          target = "/home/${config.nos.user.name}/.config/${folderName}/themes/${file}.css";
+        };
     };
 
-    environment.systemPackages = with pkgs;
-      [
-        # (discord.override {
-        #   withOpenASAR = true;
-        #   withVencord = true;
-        # })
-        vesktop
-      ];
+    environment.systemPackages = [ cfg.package ];
   };
 }

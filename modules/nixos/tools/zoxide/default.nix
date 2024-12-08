@@ -1,9 +1,15 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.tools.zoxide;
-in {
-  options.nos.tools.zoxide = with types; {
+{
+  lib,
+  config,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.tools.zoxide;
+in
+{
+  options.nos.tools.zoxide = {
     enable = mkEnableOption "Enable zoxide.";
   };
 

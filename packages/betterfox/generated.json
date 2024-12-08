@@ -1,0 +1,22 @@
+{
+    "betterfox": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "betterfox",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "yokoffing",
+            "repo": "Betterfox",
+            "rev": "131.0",
+            "sha256": "sha256-CxPZxo9G44lRocNngjfwTBHSqL5dEJ5MNO5Iauoxp2Y=",
+            "type": "github"
+        },
+        "version": "131.0"
+    }
+}

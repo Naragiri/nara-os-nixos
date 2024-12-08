@@ -1,21 +1,28 @@
-{ lib, config, inputs, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.system.boot.lanzaboote;
-in {
+{
+  lib,
+  config,
+  inputs,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.system.boot.lanzaboote;
+in
+{
   imports = with inputs; [ lanzaboote.nixosModules.lanzaboote ];
 
-  options.nos.system.boot.lanzaboote = with types; {
+  options.nos.system.boot.lanzaboote = {
     enable = mkEnableOption "Enable lanzaboote (secure boot).";
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ sbctl ];
+    environment.systemPackages = [ pkgs.sbctl ];
 
     boot.loader.systemd-boot.enable = lib.mkForce false;
 
-    boot.lanzaboote = {
-      enable = true;
+    boot.lanzaboote = enabled // {
       pkiBundle = "/etc/secureboot";
     };
   };

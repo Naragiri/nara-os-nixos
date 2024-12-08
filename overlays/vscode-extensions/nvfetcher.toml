@@ -1,0 +1,19 @@
+[nix-ide]
+src.vsmarketplace = "jnoortheen.nix-ide"
+fetch.vsmarketplace = "jnoortheen.nix-ide"
+
+[local-lua-debugger-vscode]
+src.vsmarketplace = "tomblind.local-lua-debugger-vscode"
+fetch.vsmarketplace = "tomblind.local-lua-debugger-vscode"
+
+[lukin-vscode-theme]
+src.vsmarketplace = "lukinco.lukin-vscode-theme"
+fetch.vsmarketplace = "lukinco.lukin-vscode-theme"
+
+[sweet-dracula-monokai]
+src.vsmarketplace = "lefd.sweetdracula-monokai"
+fetch.vsmarketplace = "lefd.sweetdracula-monokai"
+
+[just-black]
+src.vsmarketplace = "Nur.just-black"
+fetch.vsmarketplace = "Nur.just-black"

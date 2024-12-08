@@ -1,0 +1,4 @@
+[xivlauncher-rb]
+src.github = "rankynbass/XIVLauncher.Core"
+fetch.github = "rankynbass/XIVLauncher.Core"
+git.fetchSubmodules = true

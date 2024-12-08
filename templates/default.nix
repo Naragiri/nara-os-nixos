@@ -1,10 +1,6 @@
 _: {
   module = {
-    description = "Module template";
+    description = "NixOS module template";
     path = ./module;
-  };
-  system = {
-    description = "System template";
-    path = ./system;
   };
 }

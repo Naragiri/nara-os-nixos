@@ -1,19 +1,39 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.apps.terminal.kitty;
-in {
-  options.nos.apps.terminal.kitty = with types; {
+{
+  lib,
+  config,
+  ...
+}:
+let
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    mkOption
+    types
+    ;
+  cfg = config.nos.apps.terminal.kitty;
+in
+{
+  options.nos.apps.terminal.kitty = {
     enable = mkEnableOption "Enable kitty.";
-    theme = mkNullOpt str null "The theme to apply to kitty.";
-    extraConfig = mkOpt (attrsOf str) { } "Extra config to apply to kitty.";
+    themeFile = mkOption {
+      default = null;
+      description = "The theme to apply to kitty.";
+      type = types.nullOr types.str;
+    };
+    extraConfig = mkOption {
+      default = { };
+      description = "Extra config to apply to kitty.";
+      type = types.attrsOf types.str;
+    };
   };
 
   config = mkIf cfg.enable {
-    environment.shellAliases = { "ssh" = "kitten ssh"; };
+    environment.shellAliases = {
+      "ssh" = "kitten ssh";
+    };
 
     nos.home.extraOptions.programs.kitty = {
-      inherit (cfg) theme;
+      inherit (cfg) themeFile;
       enable = true;
       font = {
         name = "Caskaydia Code Nerd Font";

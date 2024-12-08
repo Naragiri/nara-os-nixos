@@ -1,13 +1,19 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.apps.chatterino;
-in {
-  options.nos.apps.chatterino = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  cfg = config.nos.apps.chatterino;
+in
+{
+  options.nos.apps.chatterino = {
     enable = mkEnableOption "Enable chatterino.";
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ chatterino2 ];
+    environment.systemPackages = [ pkgs.chatterino2 ];
   };
 }

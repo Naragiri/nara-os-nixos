@@ -1,22 +1,29 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.hardware.audio;
-in {
-  options.nos.hardware.audio = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.hardware.audio;
+in
+{
+  options.nos.hardware.audio = {
     enable = mkEnableOption "Enable pipewire.";
   };
 
   config = mkIf cfg.enable {
-    security.rtkit.enable = true;
-    services.pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      wireplumber.enable = true;
-      jack.enable = true;
-      pulse.enable = true;
+    security.rtkit = enabled;
+    services.pipewire = enabled // {
+      alsa = enabled // {
+        support32Bit = true;
+      };
+      jack = enabled;
+      pulse = enabled;
+      wireplumber = enabled;
     };
-    environment.systemPackages = with pkgs; [ pavucontrol ];
+    environment.systemPackages = [ pkgs.pavucontrol ];
   };
 }

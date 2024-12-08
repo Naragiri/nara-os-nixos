@@ -1,65 +1,61 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    mkOption
+    types
+    ;
+  inherit (lib.nos) enabled;
+
   cfg = config.nos.apps.chromium;
-  default-extensions = let
-    createChromiumExtensionFor = browserVersion:
-      { id, sha256, version }: {
-        inherit id;
-        crxPath = builtins.fetchurl {
-          url =
-            "https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=${browserVersion}&x=id%3D${id}%26installsource%3Dondemand%26uc";
-          name = "${id}.crx";
-          inherit sha256;
-        };
-        inherit version;
-      };
-    createChromiumExtension =
-      createChromiumExtensionFor (lib.versions.major cfg.package.version);
-  in [
-    (createChromiumExtension {
-      # ublock origin
-      id = "cjpalhdlnbpafiamejdnhcphjbkeiagm";
-      sha256 = "sha256:0fsygwn7rff79405fr96j89i9fx7w8dl3ix9045ymgm0mf3747pd";
-      version = "1.57.0";
-    })
-    (createChromiumExtension {
-      # dark reader
-      id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
-      sha256 = "sha256:0dgia7x1bcds3jivzin668n4cmhgk9k34j4zj36n3k6ghmsrp7n3";
-      version = "4.9.85";
-    })
-    (createChromiumExtension {
-      # bitwarden
-      id = "nngceckbapebfimnlniiiahkandclblb";
-      sha256 = "sha256:0ghyvp00wj19ixn0q8qyzsbgaif84kqqqjyjs8blp6rq12yp04pn";
-      version = "2024.4.2";
-    })
-    (createChromiumExtension {
-      # user agent switcher and manager
-      id = "bhchdcejhohfmigjafbampogmaanbfkg";
-      sha256 = "sha256:10j4hq8npdrvmlry8j8k1libxf7r6r2195mf6bsd2kfxdhxfx8q8";
-      version = "0.5.0";
-    })
-    (createChromiumExtension {
-      # clearurls
-      id = "lckanjgmijmafbedllaakclkaicjfmnk";
-      sha256 = "sha256:0mdqa9w1p6cmli6976v4wi0sw9r4p5prkj7lzfd1877wk11c9c73";
-      version = "1.26.0";
-    })
-  ];
-in {
-  options.nos.apps.chromium = with types; {
+in
+{
+  options.nos.apps.chromium = {
     enable = mkEnableOption "Enable chromium.";
-    extensions =
-      mkOpt (listOf attrs) default-extensions "Extensions to add to chromium.";
-    package = mkOpt package pkgs.brave "The chromium package.";
+    extensions = mkOption {
+      default = [ ];
+      description = "A list of extensions to install.";
+      type = types.listOf types.attrs;
+    };
+    makeDefaultBrowser = mkEnableOption "Set as the default browser (mimeapps).";
+    package = mkOption {
+      default = pkgs.brave;
+      description = "The chromium browser package.";
+      type = types.package;
+    };
   };
 
   config = mkIf cfg.enable {
-    nos.home.extraOptions.programs.chromium = enabled // {
-      inherit (cfg) extensions package;
+    nos.home.extraOptions = {
+      programs.chromium = enabled // {
+        inherit (cfg) extensions package;
+      };
+      xdg.mimeApps.defaultApplications =
+        let
+          browserName = (builtins.parseDrvName cfg.package.name).name;
+          fixedBrowserName = {
+            brave = "brave-browser";
+          };
+          desktopFile = "${fixedBrowserName.${browserName} or browserName}.desktop";
+        in
+        mkIf cfg.makeDefaultBrowser {
+          "x-scheme-handler/http" = "${desktopFile}";
+          "x-scheme-handler/https" = "${desktopFile}";
+          "x-scheme-handler/chrome" = "${desktopFile}";
+          "text/html" = "${desktopFile}";
+          "application/x-extension-htm" = "${desktopFile}";
+          "application/x-extension-html" = "${desktopFile}";
+          "application/x-extension-shtml" = "${desktopFile}";
+          "application/xhtml+xml" = "${desktopFile}";
+          "application/x-extension-xhtml" = "${desktopFile}";
+          "application/x-extension-xht" = "${desktopFile}";
+        };
     };
   };
 }

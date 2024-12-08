@@ -1,13 +1,17 @@
 { lib, ... }:
-final: prev: {
-  xivlauncher = prev.xivlauncher.overrideAttrs (oldAttrs: {
-    runtimeDeps = oldAttrs.runtimeDeps ++ [ prev.gamemode ];
+_: prev: {
+  xivlauncher = (prev.xivlauncher.override { useSteamRun = true; }).overrideAttrs (oldAttrs: {
+    version = oldAttrs.version + "-gamemode";
 
-    postFixup = oldAttrs.postFixup + ''
-      wrapProgram $out/bin/XIVLauncher.Core \
-        --prefix LD_PRELOAD : ${
-          lib.makeLibraryPath [ prev.gamemode ]
-        }/libgamemodeauto.so
-    '';
+    postFixup =
+      let
+        gamemode-path = lib.makeLibraryPath [ prev.gamemode ];
+      in
+      oldAttrs.postFixup
+      + ''
+        wrapProgram $out/bin/XIVLauncher.Core \
+          --prefix LD_PRELOAD : ${gamemode-path}/libgamemodeauto.so \
+          --prefix LD_PRELOAD : ${gamemode-path}/libgamemode.so
+      '';
   });
 }

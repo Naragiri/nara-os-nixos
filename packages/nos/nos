@@ -1,0 +1,224 @@
+#!/usr/bin/env bash
+
+send_success_message() {
+    echo -e $(printf "\e[32m[SUCCESS]\e[0m $1")
+}
+
+send_action_message() {
+    echo -e $(printf "\e[35m[ACTION]\e[0m $1")
+}
+
+send_debug_message() {
+    echo -e $(printf "\e[33m[DEBUG]\e[0m $1")
+}
+
+send_error_message() {
+    echo -e $(printf "\e[31m[ERROR] $1\e[0m")
+}
+
+backup_flake() {
+  if [ -z "$FLAKE_DIR/backups" ]; then
+    mkdir -p "$FLAKE_DIR/backups"
+  fi
+
+  cp -riv "$FLAKE_DIR/flake.lock" "$FLAKE_DIR/backups/flake-lock-$(date +%Y-%m-%d-%H-%M-%S).bak"
+}
+
+rebuild() {
+  if [ -z "$REBUILD_ARG" ]; then
+    REBUILD_ARG="switch"
+  fi
+
+  allowed_values=("switch" "boot" "test" "dry" "build")
+
+  valid_argument=false
+  for value in "${allowed_values[@]}"; do
+    if [ "$REBUILD_ARG" == "$value" ]; then
+      valid_argument=true
+      break
+    fi
+  done
+
+  if [ $valid_argument == false ]; then
+    IFS="|"
+    send_error_message "Invalid argument. Please use one of the following [${allowed_values[*]}]"
+    exit 1
+  fi
+
+  out_path=$(mktemp -d -t nos.XXXXXX)/result
+  hostname=$(cat /proc/sys/kernel/hostname)
+
+  flake_output="${FLAKE_DIR}#nixosConfigurations.\"${hostname}\".config.system.build.toplevel"
+
+  nix build "$flake_output" --out-link "$out_path" --log-format internal-json --verbose |& nom --json
+
+  if [ ! -d "$out_path" ]; then
+    send_error_message "Did not find build directory."
+    exit 1
+  fi
+
+  current_profile=$(readlink -f /run/current-system)
+  nvd diff "$current_profile" "$out_path"
+
+  if [[ "$REBUILD_ARG" == "dry" || "$REBUILD_ARG" == "build" ]]; then
+    exit 0
+  fi
+
+  send_action_message "Action: $REBUILD_ARG"
+  read -p "Run? (y/N): " yn
+  yn=${yn:-"n"}
+
+  if [ "$yn" != "y" ]; then
+    send_error_message "You selected no or an invalid option."
+    exit 1
+  fi
+
+  if [[ "$REBUILD_ARG" == "test" || "$REBUILD_ARG" == "switch" ]]; then
+    doas "$out_path/bin/switch-to-configuration" test
+  fi
+
+  if [[ "$REBUILD_ARG" == "boot" || "$REBUILD_ARG" == "switch"  ]]; then
+    doas nix-env --profile "/nix/var/nix/profiles/system" --set "$out_path"
+    doas "$out_path/bin/switch-to-configuration" boot
+  fi
+
+  send_success_message "Finished."
+}
+
+update-single-input() {
+  backup_flake
+  nix flake lock --update-input "$INPUT_NAME" --flake "$FLAKE_DIR"
+}
+
+update-all-inputs() {
+  backup_flake
+  nix flake update --flake "$FLAKE_DIR"
+}
+
+update-single-pkg() {
+  parent_dirs=("$FLAKE_DIR/packages" "$FLAKE_DIR/overlays")
+  target_folder=$(find "${parent_dirs[@]}" -type d -name "$PACKAGE_NAME" 2>/dev/null)
+
+  if [[ -z "$target_folder" ]]; then
+      echo "Folder '$PACKAGE_NAME' not found within '${parent_dirs[*]}'"
+      return 1
+  fi
+
+  pkg_toml=$(find "$target_folder" -type f -name "nvfetcher.toml" 2>/dev/null)
+
+  if [[ -z "$pkg_toml" ]]; then
+      echo "nvfetcher.toml not found in folder '$target_folder'"
+      return 1
+  fi
+
+  pkg_dir=$(dirname "$pkg_toml")
+  echo "Running nvfetcher for $pkg_dir..."
+  nvfetcher --config "$pkg_toml" --build-dir "$pkg_dir"
+}
+
+update-all-pkgs() {
+  parent_dirs=("$FLAKE_DIR"/packages "$FLAKE_DIR"/overlays)
+
+  for parent_dir in "${parent_dirs[@]}"; do
+    mapfile -t pkg_tomls < <(fd nvfetcher.toml "$parent_dir")
+    
+    for pkg_toml in "${pkg_tomls[@]}"; do
+      pkg_dir=$(dirname "$pkg_toml")
+      echo "Running nvfetcher for $pkg_dir..."
+      nvfetcher --config "$pkg_toml" --build-dir "$pkg_dir"
+    done
+  done
+}
+
+build-iso() {
+  case "$ISO_TYPE" in
+    minimal) ;;
+    *) echo "Unknown configuration." && exit ;;
+  esac
+  nix build $FLAKE_DIR#install-isoConfigurations."$ISO_TYPE" --log-format internal-json -v |& nom --json
+}
+
+clean() {
+  nix store optimise --verbose && nix store gc --verbose
+}
+
+repair() {
+  nix-store --verify --check-contents --repair --verbose
+}
+
+usage() {
+  cat <<-_USAGE
+Usage: nos [option] [args]
+
+Options:
+  rebuild:
+    Rebuild the system configuration.
+    args: [switch|boot|test|dry|build] default: switch
+
+  update-input:
+    Update a single flake input.
+    args: name
+    example: nixpkgs
+
+  update-inputs
+    Update all flake inputs.
+
+  update-pkg:
+    Updates a custom package/overlay with nvfetcher.
+    args: name
+    example: nos-wallpapers
+  
+  update-pkgs:
+    Updates all custom package/overlay with nvfetcher.
+
+  build-iso:
+    Builds a system iso from x86_64-install-iso.
+    args: [minimal]
+
+  clean:
+    Garbage collect and optimize the nix store.
+
+  repair:
+    Checks for issues with and repairs the nix store.
+_USAGE
+
+#   cat <<-_EOF
+# Usage:
+#   nos rebuild [switch|boot|test|dry|build]
+#     Rebuild the system configuration.
+#     default: switch
+#   nos update-input
+#     Update a single flake input.
+#   nos update-inputs
+#     Update all the flake inputs.
+#   nos update-pkg
+#     Updates custom package/overlay to the latest version with nvfetcher.
+#   nos update-pkgs
+#     Updates all custom packages/overlays to the latest versions with nvfetcher.
+#   nos build-iso [minimal]
+#     Builds an iso from the install-iso systems.
+#   nos clean
+#     Garbage collect and optimize the nix store.
+#   nos repair
+#     Attempts to check for issues and repair the nix store.
+# _EOF
+}
+
+if [ "$EUID" -eq 0 ]; then 
+  echo "Do not run this program as root."
+  echo "We will ask for elevated privellages as needed."
+  exit
+fi
+
+FLAKE_DIR="$HOME/Repos/naraos/nixos-flake"
+case "$1" in
+    rebuild|r) shift; REBUILD_ARG="$1"; rebuild ;;
+    update-input|ui) shift; INPUT_NAME="$1"; update-single-input ;;
+    update-inputs|uia) update-all-inputs ;;
+    update-pkg|up) shift; PACKAGE_NAME="$1"; update-single-pkg ;;
+    update-pkgs|upa) update-all-pkgs ;;
+    build-iso|bi) shift; ISO_TYPE="$1"; build-iso ;;
+    clean|c) clean ;;
+    repair|rp) repair ;;
+    help|*) usage ;;
+esac

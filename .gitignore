@@ -1,5 +1,7 @@
-result
+.pre-commit-config.yaml
 *.bak
 
+.devenv/
 .direnv/
-.pre-commit-config.yaml
+backups/
+result/

@@ -1,9 +1,12 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkEnableOption mkIf generators;
   cfg = config.nos.apps.pqiv;
-  iniFormat = pkgs.formats.ini { };
 
   settings = {
     options = {
@@ -37,16 +40,20 @@ let
       t { montage_mode_return_cancel() }
     }
   '';
-in {
-  options.nos.apps.pqiv = with types; {
+in
+{
+  options.nos.apps.pqiv = {
     enable = mkEnableOption "Enable pqiv.";
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ pqiv ];
+    environment.systemPackages = [ pkgs.pqiv ];
 
     nos.home.configFile."pqivrc" = {
-      text = lib.concatLines [ (generators.toINI { } settings) extraConfig ];
+      text = lib.concatLines [
+        (generators.toINI { } settings)
+        extraConfig
+      ];
     };
 
     nos.home.extraOptions.xdg.mimeApps.defaultApplications = {

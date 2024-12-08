@@ -1,9 +1,15 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.tools.direnv;
-in {
-  options.nos.tools.direnv = with types; {
+{
+  lib,
+  config,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.tools.direnv;
+in
+{
+  options.nos.tools.direnv = {
     enable = mkEnableOption "Enable direnv.";
   };
 
@@ -14,6 +20,9 @@ in {
     };
 
     # Shut up direnv.
-    environment.sessionVariables.DIRENV_LOG_FORMAT = "";
+    environment.sessionVariables = {
+      DIRENV_LOG_FORMAT = "";
+      DIRENV_WARN_TIMEOUT = "0";
+    };
   };
 }

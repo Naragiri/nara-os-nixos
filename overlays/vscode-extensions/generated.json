@@ -1,0 +1,77 @@
+{
+    "just-black": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "just-black",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": "just-black-3.1.1.zip",
+            "sha256": "sha256-fatJZquCDsLDFGVzBol2D6LIZUbZ6GzqcVEFAwLodW0=",
+            "type": "url",
+            "url": "https://Nur.gallery.vsassets.io/_apis/public/gallery/publisher/Nur/extension/just-black/3.1.1/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        "version": "3.1.1"
+    },
+    "local-lua-debugger-vscode": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "local-lua-debugger-vscode",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": "local-lua-debugger-vscode-0.3.3.zip",
+            "sha256": "sha256-7uZHbhOa/GT9F7+xikaxuQXIGzre1q1uWTWaTJhi2UA=",
+            "type": "url",
+            "url": "https://tomblind.gallery.vsassets.io/_apis/public/gallery/publisher/tomblind/extension/local-lua-debugger-vscode/0.3.3/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        "version": "0.3.3"
+    },
+    "lukin-vscode-theme": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "lukin-vscode-theme",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": "lukin-vscode-theme-0.1.5.zip",
+            "sha256": "sha256-T6yCPCy2AprDqNTJk2ucN2EsCrODn4j/1oldSnQNigU=",
+            "type": "url",
+            "url": "https://lukinco.gallery.vsassets.io/_apis/public/gallery/publisher/lukinco/extension/lukin-vscode-theme/0.1.5/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        "version": "0.1.5"
+    },
+    "nix-ide": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "nix-ide",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": "nix-ide-0.3.5.zip",
+            "sha256": "sha256-hiyFZVsZkxpc2Kh0zi3NGwA/FUbetAS9khWxYesxT4s=",
+            "type": "url",
+            "url": "https://jnoortheen.gallery.vsassets.io/_apis/public/gallery/publisher/jnoortheen/extension/nix-ide/0.3.5/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        "version": "0.3.5"
+    },
+    "sweet-dracula-monokai": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "sweet-dracula-monokai",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": "sweetdracula-monokai-1.1.14.zip",
+            "sha256": "sha256-JUN2PQnkgqjNob//VFaGmZH5YmfM7ZXojvxkXR9MPh4=",
+            "type": "url",
+            "url": "https://lefd.gallery.vsassets.io/_apis/public/gallery/publisher/lefd/extension/sweetdracula-monokai/1.1.14/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        "version": "1.1.14"
+    }
+}

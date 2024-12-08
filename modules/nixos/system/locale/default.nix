@@ -1,6 +1,8 @@
 { lib, config, ... }:
-with lib;
-with lib.nos; {
+let
+  inherit (lib) mkForce;
+in
+{
   config = {
     i18n.defaultLocale = "en_US.UTF-8";
     i18n.extraLocaleSettings = {
@@ -17,8 +19,12 @@ with lib.nos; {
 
     time.timeZone = "America/New_York";
 
-    console = { keyMap = mkForce "us"; };
+    console = {
+      keyMap = mkForce "us";
+    };
 
-    services.xserver.xkb = { layout = "${config.console.keyMap}"; };
+    services.xserver.xkb = {
+      layout = "${config.console.keyMap}";
+    };
   };
 }

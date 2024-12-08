@@ -1,9 +1,15 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.system.boot.systemd;
-in {
-  options.nos.system.boot.systemd = with types; {
+{
+  lib,
+  config,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.system.boot.systemd;
+in
+{
+  options.nos.system.boot.systemd = {
     enable = mkEnableOption "Enable systemd boot.";
   };
 
@@ -13,8 +19,7 @@ in {
         canTouchEfiVariables = true;
         efiSysMountPoint = "/boot";
       };
-      systemd-boot = {
-        enable = true;
+      systemd-boot = enabled // {
         editor = false;
         configurationLimit = 30;
       };

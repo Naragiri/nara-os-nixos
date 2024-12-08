@@ -1,14 +1,21 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.desktop.addons.polkit-gnome;
-in {
-  options.nos.desktop.addons.polkit-gnome = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.desktop.addons.polkit-gnome;
+in
+{
+  options.nos.desktop.addons.polkit-gnome = {
     enable = mkEnableOption "Enable polkit-gnome.";
   };
 
   config = mkIf cfg.enable {
-    security.polkit.enable = true;
+    security.polkit = enabled;
     systemd = {
       user.services.polkit-gnome-authentication-agent-1 = {
         description = "polkit-gnome-authentication-agent-1";
@@ -17,8 +24,7 @@ in {
         after = [ "graphical-session.target" ];
         serviceConfig = {
           Type = "simple";
-          ExecStart =
-            "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
           Restart = "on-failure";
           RestartSec = 1;
           TimeoutStopSec = 10;

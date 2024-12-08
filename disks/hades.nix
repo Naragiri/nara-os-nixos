@@ -1,4 +1,4 @@
-{ lib, ... }: {
+_: {
   disko.devices = {
     disk = {
       sda = {
@@ -15,7 +15,12 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                mountOptions = [ "uid=0" "gid=0" "fmask=0077" "dmask=0077" ];
+                mountOptions = [
+                  "uid=0"
+                  "gid=0"
+                  "fmask=0077"
+                  "dmask=0077"
+                ];
               };
             };
             swap = {
@@ -42,6 +47,27 @@
           };
         };
       };
+      # sdb = {
+      #   type = "disk";
+      #   device = "/dev/disk/by-id/nvme-CT2000P5PSSD8_22513D4D8A1A";
+      #   content = {
+      #     type = "gpt";
+      #     partitions = {
+      #       games = {
+      #         name = "games";
+      #         size = "100%";
+      #         type = "8300";
+      #         content = {
+      #           type = "filesystem";
+      #           format = "f2fs";
+      #           mountpoint = "/mnt/games";
+      #           mountOptions = [ "noatime" ];
+      #           extraArgs = [ "-O casefold -C utf8" ];
+      #         };
+      #       };
+      #     };
+      #   };
+      # };
     };
   };
 }

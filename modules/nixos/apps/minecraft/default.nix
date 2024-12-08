@@ -1,14 +1,19 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.apps.minecraft;
-in {
-  options.nos.apps.minecraft = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  cfg = config.nos.apps.minecraft;
+in
+{
+  options.nos.apps.minecraft = {
     enable = mkEnableOption "Enable minecraft.";
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs;
-      [ (prismlauncher.override { jdks = [ jdk8 jdk17 ]; }) ];
+    environment.systemPackages = [ pkgs.prismlauncher ];
   };
 }

@@ -1,16 +1,36 @@
-{ lib, config, options, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.user;
-in {
-  options.nos.user = with types; {
-    name = mkStrOpt "nara" "The name for the main user account.";
-    initialPassword =
-      mkStrOpt "123" "The initial password for the main user account.";
-    extraGroups =
-      mkOpt (listOf str) [ ] "Extra groups for the main user account.";
-    extraOptions =
-      mkOpt attrs { } "Extra options passed to users.users.<name>.";
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkOption types;
+
+  cfg = config.nos.user;
+in
+{
+  options.nos.user = {
+    name = mkOption {
+      default = "nara";
+      description = "The name for the user.";
+      type = types.str;
+    };
+    initialPassword = mkOption {
+      default = "123";
+      description = "The initial password for the user.";
+      type = types.str;
+    };
+    extraGroups = mkOption {
+      default = [ ];
+      description = "Extra groups for the user.";
+      type = types.listOf types.str;
+    };
+    extraOptions = mkOption {
+      default = { };
+      description = "Extra options passed to users.users.<name>.";
+      type = types.attrs;
+    };
   };
 
   config = {
@@ -27,14 +47,24 @@ in {
 
     users.users.${cfg.name} = {
       inherit (cfg) name initialPassword;
-      extraGroups =
-        [ "wheel" "audio" "sound" "video" "networkmanager" "input" "tty" ]
-        ++ cfg.extraGroups;
+      extraGroups = [
+        "wheel"
+        "audio"
+        "sound"
+        "video"
+        "networkmanager"
+        "input"
+        "tty"
+        "dialout"
+      ] ++ cfg.extraGroups;
       group = "users";
       home = "/home/${cfg.name}";
       homeMode = "755";
       isNormalUser = true;
-      packages = with pkgs; [ vim nano ];
+      packages = [
+        pkgs.vim
+        pkgs.nano
+      ];
       uid = 1000;
     } // cfg.extraOptions;
   };

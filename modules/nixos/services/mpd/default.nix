@@ -1,25 +1,38 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.services.mpd;
-in {
-  options.nos.services.mpd = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    mkOption
+    types
+    ;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.services.mpd;
+in
+{
+  options.nos.services.mpd = {
     enable = mkEnableOption "Enable mpd.";
-    musicDirectory = mkStrOpt "/home/${config.nos.system.user.name}/Music"
-      "The directory to source music from.";
+    musicDirectory = mkOption {
+      default = "/home/${config.nos.user.name}/Music";
+      description = "The directory to source music from.";
+      type = types.str;
+    };
   };
 
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ mpc-cli ];
 
     systemd.services.mpd.environment = {
-      XDG_RUNTIME_DIR =
-        "/run/user/${config.users.users.${config.nos.user.name}.uid}";
+      XDG_RUNTIME_DIR = "/run/user/${toString config.users.users.${config.nos.user.name}.uid}";
     };
 
-    services.mpd = {
-      enable = true;
-      user = "${config.nos.system.user.name}";
+    services.mpd = enabled // {
+      user = "${config.nos.user.name}";
       musicDirectory = "${cfg.musicDirectory}";
       extraConfig = ''
         auto_update "yes"

@@ -1,13 +1,19 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.apps.emulators.dolphin;
-in {
-  options.nos.apps.emulators.dolphin = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  cfg = config.nos.apps.emulators.dolphin;
+in
+{
+  options.nos.apps.emulators.dolphin = {
     enable = mkEnableOption "Enable dolphin.";
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ dolphin-emu ];
+    environment.systemPackages = [ pkgs.dolphin-emu ];
   };
 }

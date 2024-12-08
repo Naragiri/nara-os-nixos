@@ -1,0 +1,22 @@
+{
+    "discord-wal-theme": {
+        "cargoLocks": null,
+        "date": "2024-04-16",
+        "extract": null,
+        "name": "discord-wal-theme",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "Gremious",
+            "repo": "discord-wal-theme-template",
+            "rev": "efacc6cd2ee5ac2d3a16f51eb353804f86a58e5c",
+            "sha256": "sha256-qfj14MmvmOmtrxS++eFv0ihN6iNH9fQzjyfujGgpS4I=",
+            "type": "github"
+        },
+        "version": "efacc6cd2ee5ac2d3a16f51eb353804f86a58e5c"
+    }
+}

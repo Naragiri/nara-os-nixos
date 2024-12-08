@@ -1,14 +1,33 @@
-{ options, config, lib, inputs, ... }:
-with lib;
-with lib.nos; {
-  imports = with inputs; [ home-manager.nixosModules.home-manager ];
+{
+  options,
+  config,
+  lib,
+  inputs,
+  ...
+}:
+let
+  inherit (lib) mkOption types mkAliasDefinitions;
+  inherit (lib.nos) enabled;
+in
+{
+  imports = [ inputs.home-manager.nixosModules.home-manager ];
 
-  options.nos.home = with types; {
-    configFile = mkOpt attrs { }
-      "A set of files to be managed by home-manager's <option>xdg.configFile</option>.";
-    extraOptions = mkOpt attrs { } "Options to pass directly to home-manager.";
-    file = mkOpt attrs { }
-      "A set of files to be managed by home-manager's <option>home.file</option>.";
+  options.nos.home = {
+    configFile = mkOption {
+      default = { };
+      description = "A set of files to be managed by home-manager's <option>xdg.configFile</option>.";
+      type = types.attrs;
+    };
+    extraOptions = mkOption {
+      default = { };
+      description = "Options to pass directly to home-manager.";
+      type = types.attrs;
+    };
+    file = mkOption {
+      default = { };
+      description = "A set of files to be managed by home-manager's <option>home.file</option>.";
+      type = types.attrs;
+    };
   };
 
   config = {
@@ -16,18 +35,18 @@ with lib.nos; {
       programs.home-manager = enabled;
       home.stateVersion = config.system.stateVersion;
       home.file = mkAliasDefinitions options.nos.home.file;
-      xdg.enable = true;
-      xdg.mime.enable = true;
-      xdg.mimeApps.enable = true;
-      xdg.configFile = mkAliasDefinitions options.nos.home.configFile;
+      xdg = enabled // {
+        configFile = mkAliasDefinitions options.nos.home.configFile;
+        mime = enabled;
+        mimeApps = enabled;
+      };
     };
 
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
 
-      users.${config.nos.user.name} =
-        mkAliasDefinitions options.nos.home.extraOptions;
+      users.${config.nos.user.name} = mkAliasDefinitions options.nos.home.extraOptions;
     };
   };
 }

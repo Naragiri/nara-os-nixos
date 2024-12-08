@@ -1,23 +1,52 @@
 { lib, ... }:
-with lib; rec {
-  mkOpt = type: default: description:
-    mkOption { inherit type default description; };
-
-  mkNullOpt = type: default: description:
-    mkOption {
-      inherit default description;
-      type = types.nullOr type;
+let
+  inherit (lib) types;
+in
+{
+  mkEnabledOption =
+    description:
+    lib.mkOption {
+      inherit description;
+      type = types.bool;
+      default = true;
     };
 
-  mkBoolOpt = mkOpt types.bool;
+  enabled = {
+    enable = true;
+  };
 
-  mkStrOpt = mkOpt types.str;
+  disabled = {
+    enable = false;
+  };
 
-  mkNumOpt = mkOpt types.int;
+  recursiveMergeAttrs =
+    attrLists:
+    let
+      inherit (lib)
+        zipAttrsWith
+        tail
+        head
+        all
+        isList
+        unique
+        concatLists
+        isAttrs
+        last
+        ;
 
-  mkEnabledOption = mkBoolOpt true;
-
-  enabled = { enable = true; };
-
-  disabled = { enable = false; };
+      f =
+        attrPath:
+        zipAttrsWith (
+          n: values:
+          if tail values == [ ] then
+            head values
+          else if all isList values then
+            unique (concatLists values)
+          else if all isAttrs values then
+            f (attrPath ++ [ n ]) values
+          else
+            last values
+        );
+    in
+    f [ ] attrLists;
 }

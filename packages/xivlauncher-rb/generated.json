@@ -1,0 +1,22 @@
+{
+    "xivlauncher-rb": {
+        "cargoLocks": null,
+        "date": null,
+        "extract": null,
+        "name": "xivlauncher-rb",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": true,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "rankynbass",
+            "repo": "XIVLauncher.Core",
+            "rev": "rb-v1.1.1.4",
+            "sha256": "sha256-SymS6ITzLMU+Si96RVMlAx4XmEQwjL2z9HNDCp43Kks=",
+            "type": "github"
+        },
+        "version": "rb-v1.1.1.4"
+    }
+}

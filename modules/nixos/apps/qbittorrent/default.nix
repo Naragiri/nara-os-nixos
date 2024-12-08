@@ -1,13 +1,19 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.apps.qbittorrent;
-in {
-  options.nos.apps.qbittorrent = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  cfg = config.nos.apps.qbittorrent;
+in
+{
+  options.nos.apps.qbittorrent = {
     enable = mkEnableOption "Enable qbittorrent.";
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = with pkgs; [ qbittorrent ];
+    environment.systemPackages = [ pkgs.qbittorrent ];
   };
 }

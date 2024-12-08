@@ -1,0 +1,3 @@
+[discord-wal-theme]
+src.git = "https://github.com/Gremious/discord-wal-theme-template"
+fetch.github = "Gremious/discord-wal-theme-template"

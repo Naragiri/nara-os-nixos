@@ -1,9 +1,15 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.apps.thunar;
-in {
-  options.nos.apps.thunar = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  cfg = config.nos.apps.thunar;
+in
+{
+  options.nos.apps.thunar = {
     enable = mkEnableOption "Enable thunar.";
   };
 
@@ -13,7 +19,10 @@ in {
 
     programs.thunar = {
       enable = true;
-      plugins = with pkgs.xfce; [ xfconf thunar-volman ];
+      plugins = [
+        pkgs.xfce.xfconf
+        pkgs.xfce.thunar-volman
+      ];
     };
   };
 }

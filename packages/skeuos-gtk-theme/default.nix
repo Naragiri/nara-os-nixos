@@ -1,9 +1,18 @@
-{ pkgs, lib, nerdfonts, stdenvNoCC, variant ? "Dark", colorVariant ? "Blue" }:
+{
+  pkgs,
+  lib,
+  stdenvNoCC,
+  variant ? "Dark",
+  colorVariant ? "Blue",
+}:
 let
   pname = "skeuos-gtk-theme";
   source = (pkgs.callPackages ./generated.nix { }).${pname};
 
-  validVariants = [ "Dark" "Light" ];
+  validVariants = [
+    "Dark"
+    "Light"
+  ];
   validColorVariants = [
     "Blue"
     "Green"
@@ -19,23 +28,27 @@ let
     "Violet"
     "White"
   ];
-in lib.checkListOfEnum "${pname}: variant" validVariants [ variant ]
-lib.checkListOfEnum "${pname}: colorVariant" validColorVariants [ colorVariant ]
+in
+lib.checkListOfEnum "${pname}: variant" validVariants [ variant ] lib.checkListOfEnum
+  "${pname}: colorVariant"
+  validColorVariants
+  [ colorVariant ]
 
-stdenvNoCC.mkDerivation rec {
-  inherit (source) pname version src;
+  stdenvNoCC.mkDerivation
+  {
+    inherit (source) pname version src;
 
-  dontConfigure = true;
-  dontBuild = true;
+    dontConfigure = true;
+    dontBuild = true;
 
-  installPhase = ''
-    runHook preInstall
+    installPhase = ''
+      runHook preInstall
 
-    mkdir -p $out/share/themes
-    cp -r $src/themes/Skeuos-${colorVariant}-${variant} $out/share/themes
+      mkdir -p $out/share/themes
+      cp -r $src/themes/Skeuos-${colorVariant}-${variant} $out/share/themes
 
-    runHook postInstall
-  '';
+      runHook postInstall
+    '';
 
-  meta.mainProgram = "rofi-themes";
-}
+    meta.mainProgram = "rofi-themes";
+  }

@@ -1,27 +1,37 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.system.security.doas;
-in {
-  options.nos.system.security.doas = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  inherit (lib.nos) enabled disabled;
+  cfg = config.nos.system.security.doas;
+in
+{
+  options.nos.system.security.doas = {
     enable = mkEnableOption "Enable doas and remove sudo.";
   };
 
   config = mkIf cfg.enable {
-    environment.shellAliases = { sudo = "doas"; };
+    environment.shellAliases = {
+      sudo = "doas";
+    };
 
-    environment.systemPackages = with pkgs; [ doas-sudo-shim ];
+    environment.systemPackages = [ pkgs.doas-sudo-shim ];
 
     security = {
-      sudo.enable = false;
+      sudo = disabled;
 
-      doas = {
-        enable = true;
-        extraRules = [{
-          users = [ config.nos.user.name ];
-          keepEnv = true;
-          persist = true;
-        }];
+      doas = enabled // {
+        extraRules = [
+          {
+            users = [ config.nos.user.name ];
+            keepEnv = true;
+            persist = true;
+          }
+        ];
       };
     };
   };

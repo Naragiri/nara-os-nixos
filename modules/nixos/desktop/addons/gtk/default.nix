@@ -1,50 +1,93 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.desktop.addons.gtk;
-in {
-  options.nos.desktop.addons.gtk = with types; {
+{
+  lib,
+  config,
+  ...
+}:
+let
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    mkOption
+    types
+    ;
+  inherit (lib.nos) mkEnabledOption enabled;
+  cfg = config.nos.desktop.addons.gtk;
+in
+{
+  options.nos.desktop.addons.gtk = {
     enable = mkEnableOption "Enable gtk theming.";
     cursorTheme = {
-      name = mkStrOpt "" "The name of the cursor.";
-      package = mkNullOpt package null "The package for the cursor.";
-      size = mkNumOpt 16 "The size of the cursor.";
+      name = mkOption {
+        default = "";
+        description = "The name of the cursor.";
+        type = types.str;
+      };
+      package = mkOption {
+        default = null;
+        description = "The package for the cursor.";
+        type = types.nullOr types.package;
+      };
+      size = mkOption {
+        default = 16;
+        description = "The size of the cursor.";
+        type = types.number;
+      };
     };
     iconTheme = {
-      name = mkStrOpt "" "The name of the icons for gtk.";
-      package =
-        mkNullOpt package null "The package to use for the icons for gtk.";
+      name = mkOption {
+        default = "";
+        description = "The name of the icons for gtk.";
+        type = types.str;
+      };
+      package = mkOption {
+        default = null;
+        description = "The package to use for the icons for gtk.";
+        type = types.nullOr types.package;
+      };
     };
     qt.enable = mkEnabledOption "Make qt theming follow gtk theming.";
     theme = {
-      name = mkStrOpt "" "The gtk theme name.";
-      package = mkNullOpt package null "The gtk theme package.";
+      name = mkOption {
+        default = "";
+        description = "The gtk theme name.";
+        type = types.str;
+      };
+      package = mkOption {
+        default = null;
+        description = "The gtk theme package.";
+        type = types.nullOr types.package;
+      };
     };
   };
 
   config = mkIf cfg.enable {
-    programs.dconf.enable = true;
+    programs.dconf = enabled;
 
     nos.home.extraOptions = {
-      dconf = {
-        enable = true;
+      dconf = enabled // {
         settings = {
-          "org/gnome/desktop/interface" = { color-scheme = "prefer-dark"; };
+          "org/gnome/desktop/interface" = {
+            color-scheme = "prefer-dark";
+          };
         };
       };
-      gtk = {
-        enable = true;
-        cursorTheme = { inherit (cfg.cursorTheme) name package size; };
-        iconTheme = { inherit (cfg.iconTheme) name package; };
-        theme = { inherit (cfg.theme) name package; };
+      gtk = enabled // {
+        cursorTheme = mkIf (cfg.cursorTheme.package != null) {
+          inherit (cfg.cursorTheme) name package size;
+        };
+        iconTheme = mkIf (cfg.iconTheme.package != null) {
+          inherit (cfg.iconTheme) name package;
+        };
+        theme = mkIf (cfg.theme.package != null) {
+          inherit (cfg.theme) name package;
+        };
       };
       home.pointerCursor = mkIf (cfg.cursorTheme.package != null) {
         inherit (cfg.cursorTheme) name package size;
         gtk = enabled;
         x11 = enabled;
       };
-      qt = mkIf (cfg.qt.enable) {
-        enable = true;
+      qt = mkIf cfg.qt.enable enabled // {
         platformTheme.name = "gtk";
       };
     };

@@ -1,7 +1,14 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkEnableOption mkIf getExe;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.cli-apps.lf;
+
   previewer = pkgs.writeShellScriptBin "previewer" ''
     file=$1
     w=$2
@@ -9,28 +16,25 @@ let
     x=$4
     y=$5
 
-    if [[ "$( ${pkgs.file}/bin/file -Lb --mime-type "$file")" =~ ^image ]]; then
-        ${pkgs.kitty}/bin/kitty +kitten icat --silent --stdin no --transfer-mode file --place "''${w}x''${h}@''${x}x''${y}" "$file" < /dev/null > /dev/tty
+    if [[ "$( ${getExe pkgs.file} -Lb --mime-type "$file")" =~ ^image ]]; then
+        ${getExe pkgs.kitty} +kitten icat --silent --stdin no --transfer-mode file --place "''${w}x''${h}@''${x}x''${y}" "$file" < /dev/null > /dev/tty
         exit 1
     fi
 
-    ${pkgs.pistol}/bin/pistol "$file"
-  '';
-  cleaner = pkgs.writeShellScriptBin "cleaner" ''
-    ${pkgs.kitty}/bin/kitty +kitten icat --clear --stdin no --silent --transfer-mode file < /dev/null > /dev/tty
+    ${getExe pkgs.pistol} "$file"
   '';
 
-  cfg = config.nos.cli-apps.lf;
-in {
-  options.nos.cli-apps.lf = with types; {
+  cleaner = pkgs.writeShellScriptBin "cleaner" "${getExe pkgs.kitty} +kitten icat --clear --stdin no --silent --transfer-mode file < /dev/null > /dev/tty";
+in
+{
+  options.nos.cli-apps.lf = {
     enable = mkEnableOption "Enable lf.";
   };
 
   config = mkIf cfg.enable {
     nos.home.configFile."lf/icons".source = ./lf-icons;
 
-    nos.home.extraOptions.programs.lf = {
-      enable = true;
+    nos.home.extraOptions.programs.lf = enabled // {
       commands = {
         mkdir = ''
           ''${{
@@ -40,7 +44,9 @@ in {
           }}
         '';
       };
-      keybindings = { n = "mkdir"; };
+      keybindings = {
+        n = "mkdir";
+      };
       settings = {
         preview = true;
         hidden = true;
@@ -49,8 +55,8 @@ in {
         ignorecase = true;
       };
       extraConfig = ''
-        set cleaner ${cleaner}/bin/cleaner
-        set previewer ${previewer}/bin/previewer
+        set cleaner ${getExe cleaner}
+        set previewer ${getExe previewer}
       '';
     };
   };

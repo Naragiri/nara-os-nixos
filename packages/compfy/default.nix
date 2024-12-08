@@ -2,7 +2,8 @@
 let
   pname = "compfy";
   source = (pkgs.callPackages ./generated.nix { }).${pname};
-in pkgs.picom.overrideAttrs (oldAttrs: rec {
+in
+pkgs.picom.overrideAttrs (oldAttrs: {
   inherit (source) pname version src;
 
   buildInputs = with pkgs; [ pcre2 ] ++ oldAttrs.buildInputs;

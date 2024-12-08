@@ -1,17 +1,36 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.apps.easyeffects;
-in {
-  options.nos.apps.easyeffects = with types; {
+{
+  lib,
+  config,
+  ...
+}:
+let
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    mkOption
+    types
+    ;
+  inherit (lib.nos) enabled;
+
+  cfg = config.nos.apps.easyeffects;
+in
+{
+  options.nos.apps.easyeffects = {
     enable = mkEnableOption "Enable easyeffects.";
-    preset = mkNullOpt str null "The preset to use.";
+    preset = mkOption {
+      default = null;
+      description = "The default preset to load.";
+      type = types.nullOr types.str;
+    };
   };
 
   config = mkIf cfg.enable {
-    nos.home.extraOptions.services.easyeffects = {
-      enable = true;
-      preset = cfg.preset;
+    nos.home.configFile."easyeffects/output/${cfg.preset}.json" = {
+      text = builtins.readFile ./${cfg.preset}.json;
+    };
+
+    nos.home.extraOptions.services.easyeffects = enabled // {
+      inherit (cfg) preset;
     };
   };
 }

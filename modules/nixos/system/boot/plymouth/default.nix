@@ -1,17 +1,26 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.system.boot.plymouth;
-in {
-  options.nos.system.boot.plymouth = with types; {
+{
+  lib,
+  config,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.system.boot.plymouth;
+in
+{
+  options.nos.system.boot.plymouth = {
     enable = mkEnableOption "Enable plymouth.";
   };
 
   config = mkIf cfg.enable {
     boot = {
-      initrd.systemd.enable = true;
-      kernelParams = [ "quiet" "splash" ];
-      plymouth.enable = true;
+      initrd.systemd = enabled;
+      kernelParams = [
+        "quiet"
+        "splash"
+      ];
+      plymouth = enabled;
     };
   };
 }

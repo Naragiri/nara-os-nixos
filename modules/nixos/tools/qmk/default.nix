@@ -1,17 +1,30 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.tools.qmk;
-in {
-  options.nos.tools.qmk = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.tools.qmk;
+in
+{
+  options.nos.tools.qmk = {
     enable = mkEnableOption "Enable qmk and via(l).";
   };
 
   config = mkIf cfg.enable {
-    hardware.keyboard.qmk.enable = true;
+    hardware.keyboard.qmk = enabled;
 
-    environment.systemPackages = with pkgs; [ qmk via vial ];
+    environment.systemPackages = [
+      pkgs.via
+      pkgs.vial
+    ];
 
-    services.udev.packages = [ pkgs.via pkgs.vial ];
+    services.udev.packages = [
+      pkgs.via
+      pkgs.vial
+    ];
   };
 }

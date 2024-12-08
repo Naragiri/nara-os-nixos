@@ -1,17 +1,22 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.hardware.bluetooth;
-in {
-  options.nos.hardware.bluetooth = with types; {
+{
+  lib,
+  config,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.hardware.bluetooth;
+in
+{
+  options.nos.hardware.bluetooth = {
     enable = mkEnableOption "Enable bluetooth.";
   };
 
   config = mkIf cfg.enable {
-    services.blueman.enable = true;
+    services.blueman = enabled;
 
-    hardware.bluetooth = {
-      enable = true;
+    hardware.bluetooth = enabled // {
       powerOnBoot = true;
       settings = {
         General = {
@@ -19,7 +24,9 @@ in {
           JustWorksRepairing = "always";
           Privacy = "device";
         };
-        Policy = { AutoEnable = true; };
+        Policy = {
+          AutoEnable = true;
+        };
       };
     };
   };

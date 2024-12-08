@@ -2,18 +2,15 @@
   description = "NaraOS NixOS Configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
-    unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    # i hate nintendo.
-    yuzu-fix.url =
-      "github:nixos/nixpkgs/d89fdbfc985022d183073cb52df4d35b791d42cf";
-
-    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    devenv.url = "github:cachix/devenv";
 
     disko = {
       url = "github:nix-community/disko";
@@ -21,7 +18,7 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -29,6 +26,8 @@
       url = "github:nix-community/lanzaboote/v0.3.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-colors.url = "github:misterio77/nix-colors";
 
     nix-ld = {
       url = "github:Mic92/nix-ld";
@@ -42,7 +41,7 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
-    nixvim.url = "github:nix-community/nixvim/nixos-23.11";
+    pid-defer.url = "github:Cloudef/pid-defer";
 
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
@@ -53,9 +52,18 @@
       url = "github:snowfallorg/lib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # i hate nintendo.
+    # yuzu-fix.url = "github:nixos/nixpkgs/d89fdbfc985022d183073cb52df4d35b791d42cf";
   };
 
-  outputs = inputs:
+  outputs =
+    inputs:
     let
       lib = inputs.snowfall-lib.mkLib {
         inherit inputs;
@@ -70,7 +78,8 @@
           namespace = "nos";
         };
       };
-    in (lib.mkFlake {
+    in
+    lib.mkFlake {
       channels-config = {
         allowUnfree = true;
         permittedInsecurePackages = [ "electron-25.9.0" ];
@@ -83,11 +92,12 @@
       templates = import ./templates { };
 
       outputs-builder = channels: {
-        checks.pre-commit-check =
-          inputs.pre-commit-hooks.lib.${channels.nixpkgs.system}.run {
-            src = ./.;
-            hooks = { treefmt.enable = true; };
+        checks.pre-commit-check = inputs.pre-commit-hooks.lib.${channels.nixpkgs.system}.run {
+          src = ./.;
+          hooks = {
+            treefmt.enable = true;
           };
+        };
       };
-    });
+    };
 }

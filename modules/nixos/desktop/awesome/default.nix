@@ -1,9 +1,16 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.desktop.awesome;
-in {
-  options.nos.desktop.awesome = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf getExe;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.desktop.awesome;
+in
+{
+  options.nos.desktop.awesome = {
     enable = mkEnableOption "Enable awesomewm with addons.";
   };
 
@@ -13,7 +20,6 @@ in {
       xserver = enabled // {
         windowManager.awesome = enabled // {
           package = pkgs.nos.awesome-git.override {
-            luaVersion = "lua";
             extraGIPackages = with pkgs; [ upower ];
           };
           luaModules = with pkgs.luaPackages; [ luarocks ];
@@ -21,18 +27,17 @@ in {
       };
     };
 
-    nos.apps = {
-      terminal.kitty = enabled;
-      vscode = {
-        extraExtensions = with pkgs; [
-          nos.vscode-local-lua-debugger
-          vscode-extensions.sumneko.lua
-        ];
+    nos = {
+      apps = {
+        terminal.kitty = enabled;
+        # vscode = {
+        #   extraExtensions = with pkgs; [
+        #     nos.vscode-local-lua-debugger
+        #     vscode-extensions.sumneko.lua
+        #   ];
+        # };
       };
-    };
-
-    nos.desktop = {
-      addons = {
+      desktop.addons = {
         gnome-keyring = enabled;
         gtk = enabled // {
           cursorTheme = {
@@ -56,15 +61,15 @@ in {
         polkit-gnome = enabled;
         redshift = enabled;
         rofi = enabled // {
-          colorScheme = "nord";
-          appLauncher = enabled // {
-            launcherType = 2;
-            launcherStyle = 2;
-          };
-          powerMenu = enabled // {
-            launcherType = 2;
-            launcherStyle = 9;
-          };
+          # colorScheme = "nord";
+          # appLauncher = enabled // {
+          #   launcherType = 2;
+          #   launcherStyle = 2;
+          # };
+          # powerMenu = enabled // {
+          #   launcherType = 2;
+          #   launcherStyle = 9;
+          # };
         };
         sddm = enabled // {
           theme = enabled // {
@@ -73,8 +78,7 @@ in {
               themeConfig = {
                 General = {
                   AccentColor = "#efefef";
-                  Background =
-                    "${pkgs.nos.nos-wallpapers}/wallhaven-r2g7rm.jpg";
+                  Background = "${pkgs.nos.nos-wallpapers}/wallhaven-r2g7rm.jpg";
                   FormPosition = "center";
                   FullBlur = "true";
                   PartialBlur = "false";
@@ -86,21 +90,21 @@ in {
         snixembed = enabled;
         wallpapers = enabled;
       };
+      home.configFile =
+        let
+          getDir = file: "awesome/bin/${file}";
+        in
+        {
+          "${getDir "app_launcher.sh"}".source = getExe config.nos.desktop.addons.rofi.script;
+        };
     };
-
-    nos.home.configFile = let getDir = file: "awesome/bin/${file}";
-    in {
-      "${getDir "app_launcher.sh"}".source = getExe
-        (pkgs.writeShellScriptBin "app-launcher" ''
-          rofi -show drun -theme /home/${config.nos.user.name}/.config/rofi/app-launcher.rasi
-        '');
-    };
-
-    environment.systemPackages = with pkgs; [ rofi ];
 
     xdg.portal = enabled // {
-      config.common.default = "*";
-      extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
+      xdgOpenUsePortal = true;
+      config = {
+        common.default = [ "gtk" ];
+      };
+      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     };
   };
 }

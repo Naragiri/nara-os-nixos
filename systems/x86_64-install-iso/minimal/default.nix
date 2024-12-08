@@ -1,6 +1,11 @@
-{ lib, ... }:
-with lib;
-with lib.nos; {
+{ lib, config, ... }:
+let
+  inherit (lib) mkIf mkForce;
+  inherit (lib.nos) enabled;
+
+  username = "nixos";
+in
+{
   # Forcefully disable wireless.
   # It's not compatiable with NetworkManager.
   networking.wireless.enable = mkForce false;
@@ -10,9 +15,17 @@ with lib.nos; {
       lf = enabled;
       fastfetch = enabled;
     };
-    hardware = { network = enabled; };
-    services = { openssh = enabled; };
-    system = { security = { doas = enabled; }; };
+    hardware = {
+      network = enabled;
+    };
+    services = {
+      openssh = enabled;
+    };
+    system = {
+      security = {
+        doas = enabled;
+      };
+    };
     tools = {
       common = enabled;
       direnv = enabled;
@@ -20,12 +33,14 @@ with lib.nos; {
       git = enabled;
       zoxide = enabled;
     };
-    user.name = "nixos";
+    user.name = "${username}";
   };
 
-  security.doas.extraRules = [{
-    users = [ "nixos" ];
-    keepEnv = true;
-    noPass = true;
-  }];
+  security.doas.extraRules = mkIf config.nos.system.security.doas.enable [
+    {
+      users = [ "${username}" ];
+      keepEnv = true;
+      noPass = true;
+    }
+  ];
 }

@@ -1,12 +1,33 @@
-{ lib, config, pkgs, ... }:
-with lib;
-with lib.nos;
-let cfg = config.nos.apps.spotify;
-in {
-  options.nos.apps.spotify = with types; {
+{
+  lib,
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
+let
+  inherit (lib) mkEnableOption mkIf;
+  inherit (lib.nos) enabled;
+  cfg = config.nos.apps.spotify;
+in
+{
+  imports = [ inputs.spicetify-nix.nixosModules.default ];
+
+  options.nos.apps.spotify = {
     enable = mkEnableOption "Enable spotify.";
   };
 
-  config =
-    mkIf cfg.enable { environment.systemPackages = with pkgs; [ spotify ]; };
+  config = mkIf cfg.enable {
+    # environment.systemPackages = [ pkgs.spotify ]; 
+    programs.spicetify = enabled // {
+      enabledExtensions =
+        let
+          spicetify-pkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+        in
+        with spicetify-pkgs.extensions;
+        [
+          adblock
+        ];
+    };
+  };
 }
