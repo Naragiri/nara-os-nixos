@@ -16,13 +16,13 @@ in
 
   nos = {
     apps = {
+      bitwarden = enabled;
+      bottles = enabled;
       chatterino = enabled;
       chromium = enabled // {
         makeDefaultBrowser = true;
       };
-      discord = enabled // {
-        # wallustTheme = enabled;
-      };
+      discord = enabled;
       emulators = {
         citra = enabled;
         dolphin = enabled;
@@ -30,10 +30,10 @@ in
         rpcs3 = enabled;
         yuzu = enabled;
       };
+      ente-auth = enabled;
       firefox = enabled // {
         betterfox = enabled;
       };
-      headsetcontrol = enabled;
       launchers = {
         artix-games-launcher = enabled;
         heroic = enabled;
@@ -41,9 +41,6 @@ in
         xivlauncher = enabled;
       };
       minecraft = enabled;
-      modding = {
-        nexus-mod-manager = enabled;
-      };
       nemo = enabled;
       pqiv = enabled;
       qbittorrent = enabled;
@@ -57,8 +54,7 @@ in
       };
       terminal.kitty = enabled;
       vscode = enabled;
-      # waydroid = enabled;
-      # zen-browser = enabled;
+      waydroid = enabled;
     };
     cli-apps = {
       ani-cli = enabled;
@@ -82,8 +78,6 @@ in
           iconTheme = {
             name = "Tela-manjaro";
             package = pkgs.tela-icon-theme;
-            # name = "Papirus-Dark";
-            # package = pkgs.papirus-icon-theme.override { color = "white"; };
           };
           theme = {
             # name = "catppuccin-mocha-teal-compact";
@@ -187,12 +181,12 @@ in
       bluetooth = enabled;
       network = enabled;
       openrgb = enabled // {
-        no-rgb = enabled;
+        # no-rgb = enabled;
       };
       ssd = enabled;
     };
     services = {
-      flatpak = enabled;
+      # flatpak = enabled;
       openssh = enabled;
       syncthing = enabled;
     };

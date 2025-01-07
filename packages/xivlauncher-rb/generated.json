@@ -13,10 +13,10 @@
             "name": null,
             "owner": "rankynbass",
             "repo": "XIVLauncher.Core",
-            "rev": "rb-v1.1.1.4",
-            "sha256": "sha256-SymS6ITzLMU+Si96RVMlAx4XmEQwjL2z9HNDCp43Kks=",
+            "rev": "rb-v1.1.1.5",
+            "sha256": "sha256-gGTxU80vvZTwUs/ulzrKikSBKIgB0VHFmVtwbOw7x38=",
             "type": "github"
         },
-        "version": "rb-v1.1.1.4"
+        "version": "rb-v1.1.1.5"
     }
 }

@@ -7,7 +7,8 @@
   ...
 }:
 let
-  inherit (lib) getExe optionals;
+  inherit (lib) getExe optionals map;
+  inherit (lib.nos) createUWSMCommand;
   inherit (inputs.nix-colors.colorschemes.${colorscheme}) palette;
 
   workspaceCount = 9;
@@ -18,9 +19,9 @@ let
         id = toString (x + 1);
       in
       [
-        "$mod, ${id}, exec, ${getExe workspace-sh} visit ${id}"
-        "$mod SHIFT, ${id}, exec, ${getExe workspace-sh} move ${id}"
-        "$mod CTRL, ${id}, exec, ${getExe workspace-sh} movesilent ${id}"
+        "$mod, ${id}, exec, ${createUWSMCommand "${getExe workspace-sh} visit ${id}"}"
+        "$mod SHIFT, ${id}, exec, ${createUWSMCommand "${getExe workspace-sh} move ${id}"}"
+        "$mod CTRL, ${id}, exec, ${createUWSMCommand "${getExe workspace-sh} movesilent ${id}"}"
       ]
     ) workspaceCount
   );
@@ -37,7 +38,6 @@ in
 
   animations = {
     enabled = true;
-
     animation = [
       "windows,1,5,smooth,popin"
       "fade,1,5,default"
@@ -49,22 +49,22 @@ in
 
   bind =
     [
-      "$mod, B, exec, $browser"
-      "$mod, E, exec, $fileManager"
-      "$mod, Return, exec, $terminal"
+      "$mod, B, exec, ${createUWSMCommand "$browser"}"
+      "$mod, E, exec, ${createUWSMCommand "$fileManager"}"
+      "$mod, Return, exec, ${createUWSMCommand "$terminal"}"
       "$mod, Q, killactive"
       "$mod ALT, Q, exit"
       "$mod, V, togglefloating"
       "$mod SHIFT, V, fullscreen"
-      "$mod SHIFT, period, exec, ${getExe config.nos.apps.vscode.package} /home/${config.nos.user.name}/Repos/naraos/nixos-flake"
+      "$mod SHIFT, period, exec, ${createUWSMCommand "${getExe config.nos.apps.vscode.package} /home/${config.nos.user.name}/Repos/naraos/nixos-flake"}"
       "$mod SHIFT, V, fullscreen"
-      ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%+"
-      ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%-"
+      ", XF86AudioRaiseVolume, exec, ${createUWSMCommand "wpctl set-volume @DEFAULT_SINK@ 5%+"}"
+      ", XF86AudioLowerVolume, exec, ${createUWSMCommand "wpctl set-volume @DEFAULT_SINK@ 5%-"}"
     ]
     ++ [
-      ", Print, exec, ${getExe screenshot-sh} area"
-      "SHIFT, Print, exec, ${getExe screenshot-sh} active"
-      "CTRL, Print, exec, ${getExe screenshot-sh} all"
+      ", Print, exec, ${createUWSMCommand "${getExe screenshot-sh} area"}"
+      "SHIFT, Print, exec, ${createUWSMCommand "${getExe screenshot-sh} active"}"
+      "CTRL, Print, exec, ${createUWSMCommand "${getExe screenshot-sh} all"}"
     ]
     ++ [
       "$mod, right, movefocus, r"
@@ -108,13 +108,16 @@ in
       new_optimizations = true;
     };
   };
-
-  exec-once = [
-    # "wl-paste -t text -w xclip -selection clipboard"
-    "${getExe config.nos.desktop.addons.waybar.package} &"
-    "${getExe config.nos.desktop.addons.waypaper.finalPackage} --restore &"
-    "$browser & vesktop & steam &"
-  ] ++ optionals (config.networking.hostName == "hades") [ "spotify &" ];
+  exec-once =
+    map createUWSMCommand [
+      # "wl-paste -t text -w xclip -selection clipboard"
+      "${getExe config.nos.desktop.addons.waybar.package}"
+      "${getExe config.nos.desktop.addons.waypaper.finalPackage} --restore"
+      "$browser"
+      "vesktop"
+      "spotify"
+    ]
+    ++ optionals (config.networking.hostName == "hades") [ "spotify" ];
 
   general = {
     gaps_out = 8;
@@ -170,8 +173,7 @@ in
     "tag +games,title:(FINAL FANTASY XIV)"
     "tag +games,class:(genshinimpact.exe)"
     "tag +games,class:(Overwatch2.exe)"
-    "tag +games,title:(Grand Theft Auto V)"
-    "tag +games,title:(No Man's Sky)"
+    "tag +games,class:(^steam_app_)"
 
     "opacity 0.98,tag:vscode"
     "opacity 0.98,tag:discord"
@@ -180,9 +182,11 @@ in
     "float,class:(pavucontrol)"
     "float,class:(nm-connection-editor)"
     "float,title:(^Bitwarden)"
+    "float,class:(io.ente.auth)"
     "center,class:(openrgb)"
     "center,class:(pavucontrol)"
     "center,class:(nm-connection-editor)"
+    "center,class:(io.ente.auth)"
 
     "float,class:(Rofi)"
     "opacity 0.98,class:(Rofi)"

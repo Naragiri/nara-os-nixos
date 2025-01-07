@@ -3,13 +3,13 @@
 {
   xivlauncher-rb = {
     pname = "xivlauncher-rb";
-    version = "rb-v1.1.1.4";
+    version = "rb-v1.1.1.5";
     src = fetchFromGitHub {
       owner = "rankynbass";
       repo = "XIVLauncher.Core";
-      rev = "rb-v1.1.1.4";
+      rev = "rb-v1.1.1.5";
       fetchSubmodules = true;
-      sha256 = "sha256-SymS6ITzLMU+Si96RVMlAx4XmEQwjL2z9HNDCp43Kks=";
+      sha256 = "sha256-gGTxU80vvZTwUs/ulzrKikSBKIgB0VHFmVtwbOw7x38=";
     };
   };
 }

@@ -13,7 +13,7 @@ let
     types
     getExe
     ;
-  inherit (lib.nos) enabled;
+  inherit (lib.nos) enabled createUWSMCommand;
   cfg = config.nos.desktop.addons.rofi;
 
   rofi-launcher-wrapped = pkgs.writeShellScriptBin "rofi-launcher-wrapped" (
@@ -64,9 +64,9 @@ in
             in
             # TODO: Fix rofi
             [
-              "$mod, Space, exec, ${mkRofiCommand "-show drun"}"
+              "$mod, Space, exec, ${createUWSMCommand "${mkRofiCommand "-show drun"}"}"
               # "$mod, period, exec, ${mkRofiCommand' "-show emoji"}" # TODO: Fix
-              "$mod SHIFT, B, exec, ${getExe cfg.rofi-beats.script}" # TODO: Fix, mergeattrs doesn't like bind being declared twice.
+              "$mod SHIFT, B, exec, ${createUWSMCommand "${getExe cfg.rofi-beats.script}"}"
             ];
         };
       };

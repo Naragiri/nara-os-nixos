@@ -18,7 +18,7 @@ let
     optionals
     optionalAttrs
     ;
-  inherit (lib.nos) enabled recursiveMergeAttrs;
+  inherit (lib.nos) enabled disabled recursiveMergeAttrs;
   cfg = config.nos.desktop.hyprland;
 
   workspace-sh = pkgs.writeShellApplication {
@@ -96,9 +96,12 @@ in
 
   config = mkIf cfg.enable {
     services.xserver = enabled;
-    programs.hyprland = enabled;
+    programs.hyprland = enabled // {
+      withUWSM = true;
+    };
 
     nos.home.extraOptions.wayland.windowManager.hyprland = enabled // {
+      systemd = disabled;
       xwayland = enabled;
       settings = recursiveMergeAttrs [
         (import ./settings.nix {

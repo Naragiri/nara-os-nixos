@@ -1,6 +1,5 @@
 {
   pkgs,
-  nerdfonts,
   stdenvNoCC,
 }:
 let
@@ -11,12 +10,8 @@ stdenvNoCC.mkDerivation {
   inherit (source) pname version src;
 
   buildInputs = [
-    (nerdfonts.override {
-      fonts = [
-        "JetBrainsMono"
-        "Iosevka"
-      ];
-    })
+    pkgs.nerd-fonts.jetbrains-mono
+    pkgs.nerd-fonts.iosevka
   ];
 
   installPhase = ''

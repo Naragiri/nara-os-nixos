@@ -3,10 +3,10 @@
 {
   decky-loader = {
     pname = "decky-loader";
-    version = "v3.0.4";
+    version = "v3.0.5";
     src = fetchurl {
-      url = "https://github.com/SteamDeckHomebrew/decky-loader/releases/download/v3.0.4/PluginLoader";
-      sha256 = "sha256-94pQL/fmpApP+suku4a/q7nTTf/zqVaT5rbVowEFYPY=";
+      url = "https://github.com/SteamDeckHomebrew/decky-loader/releases/download/v3.0.5/PluginLoader";
+      sha256 = "sha256-qLe9WP8MCsgPXAfh+hO+5F8bsXGVKD9JAqeTDECrp2E=";
     };
   };
 }

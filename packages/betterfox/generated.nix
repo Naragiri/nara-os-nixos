@@ -3,13 +3,13 @@
 {
   betterfox = {
     pname = "betterfox";
-    version = "131.0";
+    version = "133.0";
     src = fetchFromGitHub {
       owner = "yokoffing";
       repo = "Betterfox";
-      rev = "131.0";
+      rev = "133.0";
       fetchSubmodules = false;
-      sha256 = "sha256-CxPZxo9G44lRocNngjfwTBHSqL5dEJ5MNO5Iauoxp2Y=";
+      sha256 = "sha256-Uu/a5t74GGvMIJP5tptqbiFiA+x2hw98irPdl8ynGoE=";
     };
   };
 }

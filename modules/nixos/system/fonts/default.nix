@@ -35,20 +35,19 @@ in
           pkgs.noto-fonts-emoji
           pkgs.font-awesome
           pkgs.fira-code-symbols
-          (pkgs.nerdfonts.override {
-            fonts = [
-              "FiraCode"
-              "JetBrainsMono"
-              "CascadiaCode"
-            ];
-          })
+          # (pkgs.nerdfonts.override {
+          #   fonts = [
+          #     "FiraCode"
+          #     "JetBrainsMono"
+          #     "CascadiaCode"
+          #   ];
+          # })
         ]
-        # 25.05
-        # ++ (with pkgs.nerd-fonts; [
-        #   fira-code
-        #   jetbrains-mono
-        #   caskaydia-cove
-        # ])
+        ++ (with pkgs.nerd-fonts; [
+          fira-code
+          jetbrains-mono
+          caskaydia-cove
+        ])
         ++ cfg.system.extraFonts;
     };
 

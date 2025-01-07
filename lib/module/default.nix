@@ -19,6 +19,9 @@ in
     enable = false;
   };
 
+  # For hyprland
+  createUWSMCommand = command: "uwsm app -- ${command}";
+
   recursiveMergeAttrs =
     attrLists:
     let
