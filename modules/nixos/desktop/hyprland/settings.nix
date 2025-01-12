@@ -117,7 +117,10 @@ in
       "vesktop"
       "spotify"
     ]
-    ++ optionals (config.networking.hostName == "hades") [ "spotify" ];
+    ++ optionals (config.networking.hostName == "hades") [
+      "steam"
+      "spotify"
+    ];
 
   general = {
     gaps_out = 8;
@@ -129,6 +132,7 @@ in
 
     resize_on_border = false;
 
+    #TODO: Enable for steam games.
     # allow_tearing = true;
 
     layout = "master";
